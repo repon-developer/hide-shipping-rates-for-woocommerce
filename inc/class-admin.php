@@ -46,7 +46,7 @@ final class Admin {
 	public function add_hide_shipping_rate_field_types($settings) {
 		$settings['hide_shipping_rates_rules_settings'] = array(
 			'default' => '',
-			'title' => esc_html__('Hide this shipping rate if matched below rule(s).', 'hide-shipping-rates-for-woocommerce'),
+			'title' => esc_html__('Hide this shipping rate if match below rule(s).', 'hide-shipping-rates-for-woocommerce'),
 			'id' => 'hide_shipping_rates_rules_settings',
 			'type' => 'hide_shipping_rates_rules_settings',
 		);

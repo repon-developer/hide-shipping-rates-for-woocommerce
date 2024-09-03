@@ -199,7 +199,7 @@
 		data() {
 			return {
 				rules: [],
-				data_added: false
+				match_type: 'all'
 			}
 		},
 
@@ -317,8 +317,12 @@
 	}
 
 	function initialize_rule_settings_field() {
+		if (!$('#hide-shipping-rates-rules-field').length) {
+			return;
+		}
+
 		const Main_App = Vue.createApp(Hide_Shipping_Rates).use(sortablejs)
-		const main_app_holder = Main_App.mount('#hide-shipping-rates-rules-field')		
+		const main_app_holder = Main_App.mount('#hide-shipping-rates-rules-field')
 
 		const shipping_rate_rule_settings = $('#hide-shipping-rates-rules-field').data('settings');
 		if (typeof shipping_rate_rule_settings === 'object') {
@@ -330,10 +334,11 @@
 
 	initialize_rule_settings_field();
 
+	$(document.body).on('wc_backbone_modal_loaded', function (event, modal_name) {
+		if ('wc-modal-shipping-method-settings' !== modal_name) {
+			return;
+		}
 
-
-
-	$(document.body).on('wc_backbone_modal_loaded', function (event, data) {
 		initialize_rule_settings_field()
 	});
 
