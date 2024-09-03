@@ -9,19 +9,19 @@ if (!defined('ABSPATH')) {
 /**
  * Condition class for template of options
  */
-final class Condition_Templates {
+final class Rules_Template {
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'between_dates'));
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'between_times'));
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'add_billing_zipcode_template'));
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'add_billing_state_template'));
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'add_shipping_zipcode_template'));
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'add_shipping_state_template'));
-		add_action('advanced_rule_based_shipping/condition_templates', array($this, 'customer_roles'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'between_dates'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'between_times'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'add_billing_zipcode_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'add_billing_state_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'add_shipping_zipcode_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'add_shipping_state_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'customer_roles'));
 	}
 
 	/**

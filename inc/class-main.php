@@ -45,9 +45,9 @@ final class Main {
 	 * Conditions template class
 	 * 
 	 * @since 1.0.0
-	 * @var Condition_Template
+	 * @var Rules_Template
 	 */
-	public $rule_templates = null;
+	public $rules_template = null;
 
 	/**
 	 * Constructor.
@@ -67,7 +67,7 @@ final class Main {
 	public function include_files() {
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-utils.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-admin.php';
-		//require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-condition-templates.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rules-template.php';
 	}
 
 	/**
@@ -77,7 +77,7 @@ final class Main {
 	 */
 	public function init() {
 		$this->admin = new Admin();
-		//$this->rule_templates = new Condition_Templates();
+		$this->rules_template = new Rules_Template();
 	}
 
 	/**

@@ -76,6 +76,7 @@
 
 			$(this.$refs.select2_ajax).select2({
 				placeholder: $(this).data('placeholder'),
+				dropdownCssClass: 'hide-shipping-rates-select2-dropdown',
 				ajax: {
 					url: hide_shipping_rates_admin.ajax_url,
 					dataType: "json",
@@ -114,7 +115,8 @@
 			})
 
 			$(this.$refs.select2_dropdown).select2({
-				placeholder: $(this).data('placeholder')
+				placeholder: $(this).data('placeholder'),
+				dropdownCssClass: 'hide-shipping-rates-select2-dropdown',
 			}).on('change', function () {
 				const selected_model = $(this).data('model');
 				if (selected_model && selected_model.length) {
