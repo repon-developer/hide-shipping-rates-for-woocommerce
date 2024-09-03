@@ -1,0 +1,342 @@
+(function ($) {
+
+	const has_pro = wp.hooks.applyFilters('hide_shipping_rates_has_pro', false);
+
+	function get_uid(random_number = 66) {
+		var d = new Date().getTime() + random_number;
+		var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			var r = Math.random() * 16;
+			if (d > 0) {
+				r = (d + r) % 16 | 0;
+				d = Math.floor(d / 16);
+			} else {
+				r = (d2 + r) % 16 | 0;
+				d2 = Math.floor(d2 / 16);
+			}
+			return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+		});
+	}
+
+	const rule_params = wp.hooks.applyFilters('hide_shipping_rates_condition_params', {
+		value: '',
+		weekly_days: [],
+		logged_in: 'yes',
+		customer_users: [],
+		billing_cities: '',
+		shipping_cities: '',
+		type: 'cart:subtotal',
+		operator: 'less_than',
+		billing_countries: [],
+		shipping_countries: [],
+	});
+
+	const rule_extra_params = wp.hooks.applyFilters('hide_shipping_rates_condition_extra_params', {
+		hold_customers: [],
+		loading_customers: true,
+	});
+
+	const Rule = {
+		template: '#component-shipping-rate-rule',
+
+		props: {
+			rule: {
+				type: Object,
+			},
+			number: {
+				type: Number,
+				default: 0
+			},
+		},
+
+		data() {
+			return Object.assign({
+				id: get_uid(),
+				...rule_params,
+				...rule_extra_params
+			}, this.rule)
+		},
+
+		beforeMount() {
+			this.$root.rules[this.number] = this.$data;
+		},
+
+		mounted() {
+			//this.pre_load_layout_data();
+			wp.hooks.doAction('hide_shipping_rates_condition_mounted', this);
+		},
+
+		beforeUpdate() {
+			$(this.$refs.select2_ajax).select2('destroy')
+			$(this.$refs.select2_dropdown).select2('destroy')
+		},
+
+		updated() {
+			const self = this;
+
+			$(this.$refs.select2_ajax).select2({
+				placeholder: $(this).data('placeholder'),
+				ajax: {
+					url: hide_shipping_rates_admin.ajax_url,
+					dataType: "json",
+					type: "POST",
+					delay: 500,
+					data: function (params) {
+						let country = self.billing_state_country;
+						if ($(this).data('model') == 'shipping_states') {
+							country = self.shipping_state_country;
+						}
+
+						return {
+							country,
+							term: params.term,
+							type: $(this).data('type'),
+							security: hide_shipping_rates_admin.nonce_select2,
+							action: 'advanced_rule_based_shipping/get_select2_data'
+						}
+					},
+					processResults: function (result) {
+						return {
+							results: $.map(result.data, function (user) {
+								return {
+									text: user.name,
+									id: user.id
+								}
+							})
+						};
+					}
+				}
+			}).on('change', function () {
+				const selected_model = $(this).data('model');
+				if (selected_model && selected_model.length) {
+					self[selected_model] = $(this).val();
+				}
+			})
+
+			$(this.$refs.select2_dropdown).select2({
+				placeholder: $(this).data('placeholder')
+			}).on('change', function () {
+				const selected_model = $(this).data('model');
+				if (selected_model && selected_model.length) {
+					self[selected_model] = $(this).val();
+				}
+			})
+
+			wp.hooks.doAction('hide_shipping_rates_condition_updated', self);
+		},
+
+		watch: {
+			type() {
+				this.pre_load_layout_data();
+			},
+
+			...wp.hooks.applyFilters('hide_shipping_rates_condition_watch', {})
+		},
+
+		methods: {
+			get_countries() {
+				return hide_shipping_rates_admin.countries;
+			},
+
+			get_ui_data_items(key) {
+				return Array.isArray(this[key]) ? this[key] : [];
+			},
+
+			delete_item() {
+				const response = confirm(hide_shipping_rates_admin.i10n.delete_condition_warning)
+				if (response) {
+					this.$parent.conditions.splice(this.number, 1)
+				}
+			},
+
+			pre_load_layout_data() {
+				const self = this;
+
+				(function () {
+					if (self.type !== 'customer:users') {
+						return
+					}
+
+					if (self.customer_users.length == 0 || !Array.isArray(self.customer_users)) {
+						return self.loading_customers = false;
+					}
+
+					self.loading_customers = true;
+
+					const formData = new FormData();
+					self.customer_users.forEach((user_id) => {
+						formData.append('user_ids[]', user_id);
+					})
+
+					formData.append('type', 'users')
+					formData.append('security', hide_shipping_rates_admin.nonce)
+					formData.append('action', 'advanced_rule_based_shipping/get_dropdown_data')
+
+					fetch(hide_shipping_rates_admin.ajax_url, {
+						method: 'POST',
+						body: formData
+					}).then((response) => response.json()).then((result) => {
+						if (result.success == true) {
+							self.loading_customers = false;
+							self.hold_customers = result.data;
+						}
+					}).catch((e) => { })
+				})();
+
+
+				wp.hooks.doAction('hide_shipping_rates_condition_preload', this);
+			},
+
+			...wp.hooks.applyFilters('hide_shipping_rates_condition_methods', {})
+		}
+	}
+
+	const Hide_Shipping_Rates = {
+		components: {
+			'rule': Rule
+		},
+
+		data() {
+			return {
+				rules: [],
+				data_added: false
+			}
+		},
+
+		computed: {
+			get_rule_data() {
+				return JSON.stringify(this.$data);
+			},
+		},
+
+		methods: {
+			check_data() {
+				if (!this.title.length) {
+					this.error = hide_shipping_rates_admin.i10n.error_shipping_rule_title_missing;
+					return false;
+				}
+
+				const rules = this.rules.map((rule) => {
+					rule.title = rule.title.trim();
+					return rule;
+				}).filter((rule) => {
+					return (rule.disabled == false && rule.title.length == 0)
+				})
+
+				if (rules.length > 0) {
+					this.error = hide_shipping_rates_admin.i10n.error_title_missing;
+					return false;
+				}
+
+				return true;
+			},
+
+			save_shipping_rule() {
+				this.error = '';
+				if (this.check_data() === false) {
+					return;
+				}
+
+				this.saving = true;
+
+				const rules = JSON.parse(JSON.stringify(this.rules));
+				rules.forEach((rule) => {
+					delete rule.id
+					if (!Array.isArray(rule.conditions)) {
+						return;
+					}
+
+					rule.conditions.map((condition) => {
+						delete condition.id;
+						Object.keys(condition_extra_params).forEach((remove_key) => {
+							delete condition[remove_key];
+						})
+					})
+				})
+
+				const request_data = {
+					id: this.id,
+					title: this.title,
+					rules: JSON.stringify(rules),
+					_wpnonce: this.$refs.nonce.value,
+					action: 'advanced_rule_based_shipping/save_shipping_rule'
+				}
+
+				fetch(hide_shipping_rates_admin.ajax_url, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams(request_data).toString(),
+				}).then((response) => response.json()).then((result) => {
+					if (result.success === true) {
+						if (result.data?.redirect === true) {
+							window.location = result.data.redirect_url;
+						}
+					}
+				}).finally(() => {
+					this.saving = false
+				})
+
+			},
+
+			add_new_rule() {
+				if (this.rules.length >= this.get_free_rule_count && has_pro === false) {
+					this.show_get_pro_modal = true;
+					return;
+				}
+
+				this.rules.push({})
+			},
+
+			duplicate_rule(rule_no) {
+				if (this.rules.length >= this.get_free_rule_count && has_pro === false) {
+					this.show_get_pro_modal = true;
+					return;
+				}
+
+				const rule = JSON.parse(JSON.stringify(this.rules[rule_no]));
+				this.rules.push({ ...rule, collapse: false, id: get_uid(), })
+			},
+
+			onOrderChange(event) {
+				let item = this.rules.splice(event.oldIndex, 1)[0];
+				this.rules.splice(event.newIndex, 0, item);
+			},
+
+			has_pro() {
+				return has_pro
+			},
+
+			get_button_classes() {
+				return {
+					'button': true,
+					'button-save-rule': true,
+					'saving-rule': this.saving
+				}
+			}
+		}
+	}
+
+	function initialize_rule_settings_field() {
+		const Main_App = Vue.createApp(Hide_Shipping_Rates).use(sortablejs)
+		const main_app_holder = Main_App.mount('#hide-shipping-rates-rules-field')		
+
+		const shipping_rate_rule_settings = $('#hide-shipping-rates-rules-field').data('settings');
+		if (typeof shipping_rate_rule_settings === 'object') {
+			for (const key in shipping_rate_rule_settings) {
+				main_app_holder[key] = shipping_rate_rule_settings[key]
+			}
+		}
+	}
+
+	initialize_rule_settings_field();
+
+
+
+
+	$(document.body).on('wc_backbone_modal_loaded', function (event, data) {
+		initialize_rule_settings_field()
+	});
+
+
+
+})(jQuery)

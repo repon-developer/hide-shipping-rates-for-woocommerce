@@ -1,0 +1,122 @@
+@-webkit-keyframes rotate {
+	from {
+		-webkit-transform: rotate(0deg);
+	}
+
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-moz-keyframes rotate {
+	from {
+		-moz-transform: rotate(0deg);
+	}
+
+	to {
+		-moz-transform: rotate(360deg);
+	}
+}
+
+@keyframes rotate {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+#hide-shipping-rates-rules-field {
+	--primaryColor: #4c2dc1
+}
+
+.hide-shipping-rates-rules-settings-label {
+	display: inline-block!important;
+}
+
+#hide-shipping-rates-rules-field {
+	max-width: 800px;
+}
+
+.btn-hide-shipping-rates-add-rule-large {
+	color: var(--primaryColor);
+    padding: 20px;
+    font-weight: 500;
+	font-size: 16px;
+    display: inline-flex;
+    text-decoration: none;
+    border-radius: 5px;
+    align-items: center;
+	text-align: center;
+    justify-content: center;
+    border: 1px dashed var(--primaryColor);
+    transition: all .2s;
+}
+
+.btn-hide-shipping-rates-add-rule-large:hover {
+	color: #fff;
+	background-color: var(--primaryColor);
+}
+
+.button.btn-hide-shipping-rates-add-rule {
+	color: #fff;
+    margin-top: 5px;
+    display: inline-block;
+    border-color: var(--primaryColor);
+    background-color: var(--primaryColor);
+    box-shadow: none !important;
+}
+
+.wc-shipping-zone-method-fields #hide-shipping-rates-rules-field{
+	margin-top: 10px;
+}
+
+.wc-shipping-zone-method-fields .btn-hide-shipping-rates-add-rule-large {
+	display: block;
+	width: 100%;
+}
+
+.hide-shipping-rates-rule-item, .hide-shipping-rates-pro-field {
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.hide-shipping-rates-rule-item {
+	position: relative;
+	width: fit-content;
+	margin-bottom: 7px!important;
+}
+
+.hide-shipping-rates-rule-item * {
+	box-sizing: border-box;
+}
+
+.hide-shipping-rates-rule-item :is(select, input) {
+	margin: 0!important;
+	min-height: 34px!important;
+	width: fit-content!important;
+	padding-block: 0!important;
+	line-height: 34px!important;
+}
+
+.hide-shipping-rates-rule-item .rule-action-tools {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 3000;
+	display: none;
+}
+
+.hide-shipping-rates-rule-item:hover .rule-action-tools {
+	display: block;
+}
+
+.wc-shipping-zone-method-fields .hide-shipping-rates-rule-item {
+	width: 100%!important;
+	padding-bottom: 7px!important;
+	border-bottom: 1px dashed #ccc;
+}
