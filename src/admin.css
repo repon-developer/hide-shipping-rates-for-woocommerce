@@ -262,3 +262,31 @@
 	gap: 25px;
 	align-items: center;
 }
+
+#hide-shipping-rates-rules-field .input-field-loading {
+	position: relative;
+	width: 18px;
+	margin-left: 3px;
+	align-self: center;
+	aspect-ratio: 1 / 1;
+}
+
+#hide-shipping-rates-rules-field .input-field-loading:after {
+	content: "";
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 50%;
+	margin-top: -10px;
+	margin-left: -10px;
+	aspect-ratio: 1 / 1;
+	border-radius: 100px;
+	animation-name: rotate;
+	animation-duration: 1000ms;
+	border: 2px solid #dadada;
+	border-top-color: #fff;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	z-index: 5;
+	box-sizing: border-box;
+}
