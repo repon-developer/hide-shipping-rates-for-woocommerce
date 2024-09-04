@@ -109,10 +109,10 @@ $condition_groups = Utils::get_condition_groups(); ?>
 
 	<?php do_action('hide_shipping_rates/rule_templates'); ?>
 
-	<!-- <div class="rule-action-tools">
+	<div class="rule-action-tools">
 		<span class="rule-move-handle dashicons dashicons-menu-alt"></span>
 		<a href="#" class="btn-condition-delete dashicons dashicons-no-alt" @click.prevent="delete_item()"></a>
-	</div> -->
+	</div>
 
 
 </fieldset>

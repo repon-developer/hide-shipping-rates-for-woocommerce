@@ -112,14 +112,23 @@
 
 .hide-shipping-rates-rule-item .rule-action-tools {
 	position: absolute;
-	top: 0;
+	top: -7px;
 	right: 0;
+	bottom: 0;
 	z-index: 3000;
 	display: none;
+	padding: 10px;
+	gap: 5px;
+	align-items: center;
+	background-color: #fff;
 }
 
 .hide-shipping-rates-rule-item:hover .rule-action-tools {
-	display: block;
+	display: flex;
+}
+
+.hide-shipping-rates-rule-item .rule-action-tools a {
+	
 }
 
 .hide-shipping-rates-pro-field {
@@ -219,15 +228,14 @@
 	border-color: var(--primaryColor) !important
 }
 
-
 .select2-dropdown.hide-shipping-rates-select2-dropdown .select2-results__option--highlighted[data-selected] {
 	background-color: var(--primaryColor) !important
 }
 
-.wc-shipping-zone-method-fields .hide-shipping-rates-rule-item {
+.hide-shipping-rates-rule-item {
 	width: 100% !important;
 	padding-bottom: 7px !important;
-	border-bottom: 1px dashed #e0e0e0;
+	border-bottom: 1px dashed #8f8f8f;
 }
 
 .wc-shipping-zone-method-fields .hide-shipping-rates-rule-item {

@@ -145,9 +145,9 @@
 			},
 
 			delete_item() {
-				const response = confirm(hide_shipping_rates_admin.i10n.delete_condition_warning)
+				const response = confirm(hide_shipping_rates_admin.i10n.delete_rule_warning)
 				if (response) {
-					this.$parent.conditions.splice(this.number, 1)
+					this.$root.rules.splice(this.number, 1)
 				}
 			},
 

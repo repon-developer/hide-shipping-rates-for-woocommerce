@@ -123,12 +123,7 @@ final class Admin {
 			'countries' => $wc_countries->get_countries(),
 			'nonce_select2' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
 			'i10n' => array(
-				'delete_rule_warning' => __('Do you want to delete this shipping rule?', 'hide-shipping-rates-for-woocommerce'),
-				'delete_condition_warning' => __('Do you want to delete this condition?', 'hide-shipping-rates-for-woocommerce'),
-				'restrict_delete_rule' => __('Shipping method attached with this shipping rule. You can\'t delete this rule. Please remove this shipping rule from shipping methods before deleting.', 'hide-shipping-rates-for-woocommerce'),
-				'delete_shipping_rule_item_warning' => __('Do you want to delete this rule item?', 'hide-shipping-rates-for-woocommerce'),
-				'error_shipping_rule_title_missing' => __('Please enter shipping rule title.', 'hide-shipping-rates-for-woocommerce'),
-				'error_title_missing' => __('Please enter shipping method title of rule.', 'hide-shipping-rates-for-woocommerce'),
+				'delete_rule_warning' => __('Do you want to delete this rule?', 'hide-shipping-rates-for-woocommerce'),
 			)
 		));
 	}
