@@ -125,13 +125,14 @@
 
 .hide-shipping-rates-rule-item .rule-action-tools {
 	position: absolute;
-	top: 0;
+	top: 7px;
 	right: 0;
 	bottom: 0;
 	z-index: 3000;
 	display: none;
-	padding: 10px;
+	padding: 2px;
 	gap: 5px;
+	align-self: flex-start;
 	align-items: center;
 	background-color: #fff;
 }

@@ -113,7 +113,7 @@ class Utils {
 			'cart:product_shipping_classes' => array(
 				'group' => 'cart',
 				'priority' => 20,
-				'label' => __('Product Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
+				'label' => __('Item Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
 			),
 			'date:weekly_days' => array(
 				'group' => 'date',
