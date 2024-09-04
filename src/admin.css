@@ -102,8 +102,6 @@
 	border-block: 1px dashed #8f8f8f;
 }
 
-
-
 .hide-shipping-rates-rule-item.sortable-chosen {
 	padding-inline: 10px;
 	background-color: rgb(255, 214, 164);
@@ -253,4 +251,14 @@
 
 .wc-shipping-zone-method-fields .hide-shipping-rates-rule-item select.rule-type {
 	flex: 0 0 100%;
+}
+
+.hide-shipping-rates-field-row {
+	margin-block: 12px;
+}
+
+.hide-shipping-rates-match-type {
+	display: flex;
+	gap: 25px;
+	align-items: center;
 }

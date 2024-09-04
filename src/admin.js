@@ -29,11 +29,14 @@
 		operator: 'less_than',
 		billing_countries: [],
 		shipping_countries: [],
+		shipping_classes: []
 	});
 
 	const rule_extra_params = wp.hooks.applyFilters('hide_shipping_rates_rule_extra_params', {
 		hold_customers: [],
 		loading_customers: true,
+		hold_shipping_classes: [],
+		loading_shipping_classes: true,
 	});
 
 	const Rule = {
@@ -155,6 +158,37 @@
 				const self = this;
 
 				(function () {
+					if (self.type !== 'cart:product_shipping_classes') {
+						return
+					}
+
+					if (self.shipping_classes.length == 0 || !Array.isArray(self.shipping_classes)) {
+						return self.loading_shipping_classes = false;
+					}
+
+					self.loading_shipping_classes = true;
+
+					const formData = new FormData();
+					self.shipping_classes.forEach((shipping_class) => {
+						formData.append('shipping_classes[]', shipping_class);
+					})
+
+					formData.append('type', 'shipping_classes')
+					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('action', 'hide_shipping_rates/get_select2_data')
+
+					fetch(hide_shipping_rates_admin.ajax_url, {
+						method: 'POST',
+						body: formData
+					}).then((response) => response.json()).then((result) => {
+						self.loading_shipping_classes = false;
+						if (result.success == true) {
+							self.hold_shipping_classes = result.data;
+						}
+					}).catch((e) => { })
+				})();
+
+				(function () {
 					if (self.type !== 'customer:users') {
 						return
 					}
@@ -178,8 +212,8 @@
 						method: 'POST',
 						body: formData
 					}).then((response) => response.json()).then((result) => {
+						self.loading_customers = false;
 						if (result.success == true) {
-							self.loading_customers = false;
 							self.hold_customers = result.data;
 						}
 					}).catch((e) => { })
@@ -208,7 +242,18 @@
 
 		computed: {
 			get_rule_data() {
-				return JSON.stringify(this.$data);
+				const rules = JSON.parse(JSON.stringify(this.rules));
+				rules.forEach((rule) => {
+					delete rule.id
+					Object.keys(rule_extra_params).forEach((remove_key) => {
+						delete rule[remove_key];
+					})
+				})
+
+				return JSON.stringify({
+					rules,
+					match_type: this.match_type
+				});
 			},
 		},
 

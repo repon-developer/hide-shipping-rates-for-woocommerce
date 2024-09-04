@@ -77,6 +77,18 @@ final class Admin {
 						<rule v-for="(rule, index) in rules" :key="rule.id" :rule="rule" :number="index"></rule>
 					</div>
 
+					<div class="hide-shipping-rates-field-row hide-shipping-rates-match-type" v-if="rules.length > 1">
+						<label>
+							<input type="radio" v-model="match_type" value="all">
+							<?php esc_html_e('Match all', 'hide-shipping-rates-for-woocommerce'); ?>
+						</label>
+
+						<label>
+							<input type="radio" v-model="match_type" value="any">
+							<?php esc_html_e('Match any', 'hide-shipping-rates-for-woocommerce'); ?>
+						</label>
+					</div>
+
 					<a v-if="rules.length > 0" @click.prevent="add_new_rule()" class="button btn-hide-shipping-rates-add-rule" href="#"><?php esc_html_e('Add another rule', 'hide-shipping-rates-for-woocommerce') ?></a>
 				</div>
 			</td>
@@ -168,6 +180,25 @@ final class Admin {
 
 		$query_type = !empty($_POST['type']) ? sanitize_text_field($_POST['type']) : false;
 		$search_term = !empty($_POST['term']) ? sanitize_text_field($_POST['term'])  : '';
+
+		if ('shipping_classes' == $query_type) {
+			$search_args = array('hide_empty' => false, 'taxonomy' => 'product_shipping_class');
+
+			if (!empty($search_term)) {
+				$search_args['search'] = $search_term;
+			}
+
+			if (isset($_POST['shipping_classes']) && is_array($_POST['shipping_classes'])) {
+				$shipping_classes = array_map('absint', $_POST['shipping_classes']);
+				$search_args['include'] = $shipping_classes;
+			}
+
+			$shipping_classes_terms = get_terms($search_args);
+
+			$results = array_map(function ($shipping_class) {
+				return array('id' => $shipping_class->term_id, 'name' => $shipping_class->name);
+			}, $shipping_classes_terms);
+		}
 
 		if ('users' == $query_type) {
 			if (!empty($search_term)) {

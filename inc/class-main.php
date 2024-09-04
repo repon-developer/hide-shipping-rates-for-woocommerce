@@ -158,7 +158,11 @@ final class Main {
 	 * @return boolean
 	 */
 	public function cart_rule_type($matched, $rule) {
-		if (!in_array($rule['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight'))) {
+		if (!in_array($rule['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight', 'cart:product_shipping_classes'))) {
+			return $matched;
+		}
+
+		if (is_null(WC()->cart)) {
 			return $matched;
 		}
 
@@ -233,6 +237,25 @@ final class Main {
 			}
 
 			if ('greater_than' === $operator && $weight > $target_amount) {
+				return true;
+			}
+		}
+
+		if ('cart:product_shipping_classes' === $rule['type']) {
+			$shipping_classes = isset($rule['shipping_classes']) && is_array($rule['shipping_classes']) ? $rule['shipping_classes'] : array();
+
+			$cart_products = WC()->cart->get_cart();
+			$product_shipping_classes = [];
+			foreach ($cart_products as $item) {
+				$product_shipping_classes[] = $item['data']->get_shipping_class_id();
+			}
+
+			$matched_items = array_intersect($shipping_classes, array_unique($product_shipping_classes));
+			if ('in_list' == $rule['operator'] && count($matched_items) > 0) {
+				return true;
+			}
+
+			if ('not_in_list' == $rule['operator'] && 0 === count($matched_items)) {
 				return true;
 			}
 		}
