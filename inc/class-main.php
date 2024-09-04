@@ -88,10 +88,11 @@ final class Main {
 	 */
 	public function hooks() {
 		add_filter('plugin_action_links', array($this, 'add_plugin_links'), 10, 2);
-		add_filter('advanced_rule_based_shipping/condition_matched', array($this, 'cart_condition_type'), 10, 2);
-		add_filter('advanced_rule_based_shipping/condition_matched', array($this, 'date_condition_type'), 10, 2);
-		add_filter('advanced_rule_based_shipping/condition_matched', array($this, 'customer_condition_type'), 10, 2);
-		add_filter('advanced_rule_based_shipping/condition_matched', array($this, 'billing_shipping_condition_match'), 10, 2);
+		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000);
+		add_filter('hide_shipping_rates/rule_matched', array($this, 'cart_rule_type'), 10, 2);
+		add_filter('hide_shipping_rates/rule_matched', array($this, 'date_rule_type'), 10, 2);
+		add_filter('hide_shipping_rates/rule_matched', array($this, 'customer_rule_type'), 10, 2);
+		add_filter('hide_shipping_rates/rule_matched', array($this, 'billing_shipping_rule_match'), 10, 2);
 	}
 
 	/**
@@ -102,7 +103,7 @@ final class Main {
 	 */
 	public function add_plugin_links($actions, $plugin_file) {
 		if (HIDE_SHIPPING_RATES_BASENAME == $plugin_file) {
-			$new_links[] = sprintf('<a href="%s">%s</a>', menu_page_url('hide-shipping-rates-for-woocommerce', false), __('Shipping Rules', 'hide-shipping-rates-for-woocommerce'));
+			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
 			$actions = array_merge($new_links, $actions);
 		}
 
@@ -110,20 +111,61 @@ final class Main {
 	}
 
 	/**
-	 * Cart related condition filters
+	 * Manage shipping rates
+	 * 
+	 * @since 1.0.0
+	 */
+	public function manage_shipping_rates($rates) {
+		foreach ($rates as $rate_key => $rate) {
+			$method   = \WC_Shipping_Zones::get_shipping_method($rate->get_instance_id());
+			$rule_settings = json_decode(stripslashes($method->get_option('hide_shipping_rates_rules_settings')), true);
+			if (!is_array($rule_settings) || empty($rule_settings)) {
+				continue;
+			}
+
+			$rules = isset($rule_settings['rules']) && is_array($rule_settings['rules']) ? $rule_settings['rules'] : array();
+			if (empty($rules)) {
+				continue;
+			}
+
+			$matched_rules = array_filter($rules, function ($rule) {
+				return apply_filters('hide_shipping_rates/rule_matched', false, $rule);
+			});
+
+			//error_log(print_r($matched_rules, true));
+
+			$match_type = 'all';
+			if (isset($rule_settings['match_type'])) {
+				$match_type = $rule_settings['match_type'];
+			}
+
+			if ('all' === $match_type && count($rules) === count($matched_rules)) {
+				unset($rates[$rate_key]);
+			}
+
+			if ('any' === $match_type && count($matched_rules) > 0) {
+				unset($rates[$rate_key]);
+			}
+		}
+
+		return $rates;
+	}
+
+	/**
+	 * Cart related rule filters
 	 * 
 	 * @since 1.0.0
 	 * @return boolean
 	 */
-	public function cart_condition_type($matched, $condition) {
-		if (!in_array($condition['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight'))) {
+	public function cart_rule_type($matched, $rule) {
+		if (!in_array($rule['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight'))) {
 			return $matched;
 		}
 
-		$operator = $condition['operator'];
-		$target_amount = floatval($condition['value']);
+		$operator = $rule['operator'];
+		$target_amount = floatval($rule['value']);
 
-		if ('cart:subtotal' === $condition['type']) {
+		if ('cart:subtotal' === $rule['type']) {
 			$subtotal = (float) WC()->cart->get_subtotal();
 
 			if ('equal_to' === $operator && $subtotal == $target_amount) {
@@ -147,7 +189,7 @@ final class Main {
 			}
 		}
 
-		if ('cart:total_quantity' === $condition['type']) {
+		if ('cart:total_quantity' === $rule['type']) {
 			$quantity = WC()->cart->get_cart_contents_count();
 
 			if ('equal_to' === $operator && $quantity == $target_amount) {
@@ -171,7 +213,7 @@ final class Main {
 			}
 		}
 
-		if ('cart:total_weight' === $condition['type']) {
+		if ('cart:total_weight' === $rule['type']) {
 			$weight = WC()->cart->cart_contents_weight;
 
 			if ('equal_to' === $operator && $weight == $target_amount) {
@@ -199,23 +241,21 @@ final class Main {
 	}
 
 	/**
-	 * Date related condition filters
+	 * Date related rule filters
 	 * 
 	 * @since 1.0.0
 	 * @return boolean
 	 */
-	public function date_condition_type($matched, $condition) {
-		$operator = $condition['operator'];
-
-		if ('date:weekly_days' === $condition['type']) {
-			$weekly_days = isset($condition['weekly_days']) && is_array($condition['weekly_days']) ? $condition['weekly_days'] : array();
+	public function date_rule_type($matched, $rule) {
+		if ('date:weekly_days' === $rule['type']) {
+			$weekly_days = isset($rule['weekly_days']) && is_array($rule['weekly_days']) ? $rule['weekly_days'] : array();
 			$current_day = strtolower(current_time('l'));
 
-			if ('in_list' == $operator && in_array($current_day, $weekly_days)) {
+			if ('in_list' == $rule['operator'] && in_array($current_day, $weekly_days)) {
 				return true;
 			}
 
-			if ('not_in_list' == $operator && !in_array($current_day, $weekly_days)) {
+			if ('not_in_list' == $rule['operator'] && !in_array($current_day, $weekly_days)) {
 				return true;
 			}
 		}
@@ -224,16 +264,16 @@ final class Main {
 	}
 
 	/**
-	 * Customer related condition filters
+	 * Customer related rule filters
 	 * 
 	 * @since 1.0.0
 	 * @return boolean
 	 */
-	public function customer_condition_type($matched, $condition) {
-		$operator = $condition['operator'];
+	public function customer_rule_type($matched, $rule) {
+		$operator = $rule['operator'];
 
-		if ('customer:users' === $condition['type']) {
-			$customers = isset($condition['customer_users']) && is_array($condition['customer_users']) ? $condition['customer_users'] : array();
+		if ('customer:users' === $rule['type']) {
+			$customers = isset($rule['customer_users']) && is_array($rule['customer_users']) ? $rule['customer_users'] : array();
 			if ('in_list' === $operator && in_array(get_current_user_id(), $customers)) {
 				return true;
 			}
@@ -243,11 +283,11 @@ final class Main {
 			}
 		}
 
-		if ('customer:logged_in' === $condition['type'] && 'yes' == $condition['logged_in']) {
+		if ('customer:logged_in' === $rule['type'] && 'yes' == $rule['logged_in']) {
 			return is_user_logged_in();
 		}
 
-		if ('customer:logged_in' === $condition['type'] && 'no' == $condition['logged_in']) {
+		if ('customer:logged_in' === $rule['type'] && 'no' == $rule['logged_in']) {
 			return !is_user_logged_in();
 		}
 
@@ -255,16 +295,16 @@ final class Main {
 	}
 
 	/**
-	 * Billing & Shipping condition filter
+	 * Billing & Shipping rule filters
 	 * 
 	 * @since 1.0.0
 	 * @return boolean
 	 */
-	public function billing_shipping_condition_match($matched, $condition) {
-		$operator = $condition['operator'];
+	public function billing_shipping_rule_match($matched, $rule) {
+		$operator = $rule['operator'];
 
-		if ('billing:city' === $condition['type']) {
-			$cities = $condition['billing_cities'] ?? '';
+		if ('billing:city' === $rule['type']) {
+			$cities = $rule['billing_cities'] ?? '';
 			$cities = array_filter(array_map('trim', explode(',', strtolower($cities))));
 
 			$customer_city = strtolower(WC()->customer->get_billing_city());
@@ -277,8 +317,8 @@ final class Main {
 			}
 		}
 
-		if ('shipping:city' === $condition['type']) {
-			$cities = $condition['shipping_cities'] ?? '';
+		if ('shipping:city' === $rule['type']) {
+			$cities = $rule['shipping_cities'] ?? '';
 			$cities = array_filter(array_map('trim', explode(',', strtolower($cities))));
 
 			$customer_city = strtolower(WC()->customer->get_shipping_city());
@@ -292,12 +332,12 @@ final class Main {
 			}
 		}
 
-		if ('billing:country' === $condition['type'] || 'shipping:country' === $condition['type']) {
-			$countries = isset($condition['shipping_countries']) && is_array($condition['shipping_countries']) ? $condition['shipping_countries'] : array();
+		if ('billing:country' === $rule['type'] || 'shipping:country' === $rule['type']) {
+			$countries = isset($rule['shipping_countries']) && is_array($rule['shipping_countries']) ? $rule['shipping_countries'] : array();
 
 			$customer_country = WC()->customer->get_shipping_country();
-			if ('billing:country' === $condition['type']) {
-				$countries = isset($condition['billing_countries']) && is_array($condition['billing_countries']) ? $condition['billing_countries'] : array();
+			if ('billing:country' === $rule['type']) {
+				$countries = isset($rule['billing_countries']) && is_array($rule['billing_countries']) ? $rule['billing_countries'] : array();
 				$customer_country = WC()->customer->get_billing_country();
 			}
 

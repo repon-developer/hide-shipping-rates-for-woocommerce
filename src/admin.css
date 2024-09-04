@@ -97,7 +97,12 @@
 	margin: 0 !important;
 	box-sizing: border-box;
 	padding-block: 7px !important;
+	width: 100% !important;
+	margin-bottom: -1px!important;
+	border-block: 1px dashed #8f8f8f;
 }
+
+
 
 .hide-shipping-rates-rule-item.sortable-chosen {
 	padding-inline: 10px;
@@ -240,12 +245,6 @@
 
 .select2-dropdown.hide-shipping-rates-select2-dropdown .select2-results__option--highlighted[data-selected] {
 	background-color: var(--primaryColor) !important
-}
-
-.hide-shipping-rates-rule-item {
-	width: 100% !important;
-	padding-bottom: 7px !important;
-	border-bottom: 1px dashed #8f8f8f;
 }
 
 .wc-shipping-zone-method-fields .hide-shipping-rates-rule-item {
