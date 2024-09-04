@@ -1,6 +1,6 @@
 (function ($) {
 
-	const has_pro = wp.hooks.applyFilters('hide_shipping_rates_has_pro', false);
+	const has_pro = wp.hooks.applyFilters('hide_shipping_rates_has_pro', true);
 
 	function get_uid(random_number = 66) {
 		var d = new Date().getTime() + random_number;
@@ -62,8 +62,8 @@
 		},
 
 		mounted() {
-			//this.pre_load_layout_data();
-			wp.hooks.doAction('hide_shipping_rates_condition_mounted', this);
+			this.pre_load_layout_data();
+			wp.hooks.doAction('hide_shipping_rates_rule_mounted', this);
 		},
 
 		beforeUpdate() {
@@ -132,7 +132,7 @@
 				this.pre_load_layout_data();
 			},
 
-			...wp.hooks.applyFilters('hide_shipping_rates_condition_watch', {})
+			...wp.hooks.applyFilters('hide_shipping_rates_rule_watch', {})
 		},
 
 		methods: {
@@ -171,8 +171,8 @@
 					})
 
 					formData.append('type', 'users')
-					formData.append('security', hide_shipping_rates_admin.nonce)
-					formData.append('action', 'advanced_rule_based_shipping/get_dropdown_data')
+					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('action', 'hide_shipping_rates/get_select2_data')
 
 					fetch(hide_shipping_rates_admin.ajax_url, {
 						method: 'POST',
@@ -186,10 +186,10 @@
 				})();
 
 
-				wp.hooks.doAction('hide_shipping_rates_condition_preload', this);
+				wp.hooks.doAction('hide_shipping_rates_rule_preload', this);
 			},
 
-			...wp.hooks.applyFilters('hide_shipping_rates_condition_methods', {})
+			...wp.hooks.applyFilters('hide_shipping_rates_rule_methods', {})
 		}
 	}
 
@@ -201,7 +201,8 @@
 		data() {
 			return {
 				rules: [],
-				match_type: 'all'
+				match_type: 'all',
+				show_get_pro_message: false
 			}
 		},
 
@@ -212,77 +213,9 @@
 		},
 
 		methods: {
-			check_data() {
-				if (!this.title.length) {
-					this.error = hide_shipping_rates_admin.i10n.error_shipping_rule_title_missing;
-					return false;
-				}
-
-				const rules = this.rules.map((rule) => {
-					rule.title = rule.title.trim();
-					return rule;
-				}).filter((rule) => {
-					return (rule.disabled == false && rule.title.length == 0)
-				})
-
-				if (rules.length > 0) {
-					this.error = hide_shipping_rates_admin.i10n.error_title_missing;
-					return false;
-				}
-
-				return true;
-			},
-
-			save_shipping_rule() {
-				this.error = '';
-				if (this.check_data() === false) {
-					return;
-				}
-
-				this.saving = true;
-
-				const rules = JSON.parse(JSON.stringify(this.rules));
-				rules.forEach((rule) => {
-					delete rule.id
-					if (!Array.isArray(rule.conditions)) {
-						return;
-					}
-
-					rule.conditions.map((condition) => {
-						delete condition.id;
-						Object.keys(condition_extra_params).forEach((remove_key) => {
-							delete condition[remove_key];
-						})
-					})
-				})
-
-				const request_data = {
-					id: this.id,
-					title: this.title,
-					rules: JSON.stringify(rules),
-					_wpnonce: this.$refs.nonce.value,
-					action: 'advanced_rule_based_shipping/save_shipping_rule'
-				}
-
-				fetch(hide_shipping_rates_admin.ajax_url, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-					body: new URLSearchParams(request_data).toString(),
-				}).then((response) => response.json()).then((result) => {
-					if (result.success === true) {
-						if (result.data?.redirect === true) {
-							window.location = result.data.redirect_url;
-						}
-					}
-				}).finally(() => {
-					this.saving = false
-				})
-
-			},
-
 			add_new_rule() {
-				if (this.rules.length >= this.get_free_rule_count && has_pro === false) {
-					this.show_get_pro_modal = true;
+				if (this.rules.length >= 4 && has_pro === false) {
+					this.show_get_pro_message = true;
 					return;
 				}
 
@@ -290,8 +223,8 @@
 			},
 
 			duplicate_rule(rule_no) {
-				if (this.rules.length >= this.get_free_rule_count && has_pro === false) {
-					this.show_get_pro_modal = true;
+				if (this.rules.length >= 4 && has_pro === false) {
+					this.show_get_pro_message = true;
 					return;
 				}
 
@@ -307,14 +240,6 @@
 			has_pro() {
 				return has_pro
 			},
-
-			get_button_classes() {
-				return {
-					'button': true,
-					'button-save-rule': true,
-					'saving-rule': this.saving
-				}
-			}
 		}
 	}
 

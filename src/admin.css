@@ -106,6 +106,10 @@
 	line-height: 34px !important;
 }
 
+.hide-shipping-rates-rule-item select {
+	padding-inline-end: 24px !important;
+}
+
 .hide-shipping-rates-rule-item .rule-action-tools {
 	position: absolute;
 	top: 0;
@@ -133,11 +137,16 @@
 
 #hide-shipping-rates-rules-field .select2-container {
 	margin: 0;
+	width: auto !important;
 	min-width: 250px !important
 }
 
 #hide-shipping-rates-rules-field select:not([multiple])+.select2-container {
 	width: 250px !important;
+}
+
+#hide-shipping-rates-rules-field select.select2-flex1+.select2-container {
+	flex: 1;
 }
 
 #hide-shipping-rates-rules-field .select2 .select2-selection {

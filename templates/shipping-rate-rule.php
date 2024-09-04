@@ -41,7 +41,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 		</select>
 
 		<div class="input-field-loading" v-if="loading_customers"></div>
-		<select ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'advanced-coupon-for-woocommerce'); ?>" data-model="customer_users" data-type="users">
+		<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'advanced-coupon-for-woocommerce'); ?>" data-model="customer_users" data-type="users">
 			<option v-for="user in get_ui_data_items('hold_customers')" :value="user.id" :selected="customer_users.includes(user.id.toString())">{{user.name}}</option>
 		</select>
 	</template>
@@ -58,7 +58,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 			<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 		</select>
 
-		<select v-model="weekly_days" data-model="weekly_days" ref="select2_dropdown" data-placeholder="<?php esc_attr_e('Select days', 'advanced-coupon-for-woocommerce'); ?>" multiple>
+		<select class="select2-flex1" v-model="weekly_days" data-model="weekly_days" ref="select2_dropdown" data-placeholder="<?php esc_attr_e('Select days', 'advanced-coupon-for-woocommerce'); ?>" multiple>
 			<option value="sunday"><?php esc_html_e('Sunday', 'advanced-coupon-for-woocommerce'); ?></option>
 			<option value="monday"><?php esc_html_e('Monday', 'advanced-coupon-for-woocommerce'); ?></option>
 			<option value="tuesday"><?php esc_html_e('Tuesday', 'advanced-coupon-for-woocommerce'); ?></option>
@@ -75,7 +75,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 		</select>
 
 		<?php $placeholder = __('Example: Chicago, New York', 'advanced-coupon-for-woocommerce'); ?>
-		<input style="min-width: 400px;" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+		<input style="min-width: 400px;flex:1" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
 	</template>
 
 	<template v-if="type == 'shipping:city'">
@@ -84,7 +84,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 		</select>
 
 		<?php $placeholder = __('Example: Chicago, New York', 'advanced-coupon-for-woocommerce'); ?>
-		<input style="min-width: 400px;" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+		<input style="min-width: 400px;flex:1" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
 	</template>
 
 	<template v-if="type == 'billing:country'">
@@ -92,7 +92,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 			<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 		</select>
 
-		<select v-model="billing_countries" ref="select2_dropdown" multiple data-model="billing_countries" data-placeholder="<?php esc_attr_e('Select country', 'advanced-coupon-for-woocommerce'); ?>">
+		<select class="select2-flex1" v-model="billing_countries" ref="select2_dropdown" multiple data-model="billing_countries" data-placeholder="<?php esc_attr_e('Select country', 'advanced-coupon-for-woocommerce'); ?>">
 			<option v-for="(country, country_code) in get_countries()" :value="country_code">{{country}}</option>
 		</select>
 	</template>
@@ -102,7 +102,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 			<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 		</select>
 
-		<select v-model="shipping_countries" ref="select2_dropdown" multiple data-model="shipping_countries" data-placeholder="<?php esc_attr_e('Select country', 'advanced-coupon-for-woocommerce'); ?>">
+		<select class="select2-flex1" v-model="shipping_countries" ref="select2_dropdown" multiple data-model="shipping_countries" data-placeholder="<?php esc_attr_e('Select country', 'advanced-coupon-for-woocommerce'); ?>">
 			<option v-for="(country, country_code) in get_countries()" :value="country_code">{{country}}</option>
 		</select>
 	</template>
