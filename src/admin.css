@@ -80,6 +80,10 @@
 	width: 100%;
 }
 
+.hide-shipping-rates-rules-container {
+	margin-bottom: 5px;
+}
+
 .hide-shipping-rates-rule-item,
 .hide-shipping-rates-pro-field {
 	display: flex;
@@ -90,9 +94,15 @@
 
 .hide-shipping-rates-rule-item {
 	position: relative;
-	margin-bottom: 7px !important;
+	margin: 0 !important;
+	box-sizing: border-box;
+	padding-block: 7px !important;
 }
 
+.hide-shipping-rates-rule-item.sortable-chosen {
+	padding-inline: 10px;
+	background-color: rgb(255, 214, 164);
+}
 
 .hide-shipping-rates-rule-item * {
 	box-sizing: border-box;
@@ -112,7 +122,7 @@
 
 .hide-shipping-rates-rule-item .rule-action-tools {
 	position: absolute;
-	top: -7px;
+	top: 0;
 	right: 0;
 	bottom: 0;
 	z-index: 3000;
@@ -127,8 +137,8 @@
 	display: flex;
 }
 
-.hide-shipping-rates-rule-item .rule-action-tools a {
-	
+.hide-shipping-rates-rule-item .rule-action-tools .rule-move-handle {
+	cursor: move;
 }
 
 .hide-shipping-rates-pro-field {

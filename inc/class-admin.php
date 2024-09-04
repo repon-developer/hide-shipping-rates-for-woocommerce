@@ -72,7 +72,11 @@ final class Admin {
 				<div id="hide-shipping-rates-rules-field" data-settings="<?php echo esc_attr(wp_json_encode($settings_data)) ?>">
 					<input type="hidden" name="<?php echo esc_attr($object->get_field_key($field_id)) ?>" :value="get_rule_data">
 					<a v-if="rules.length == 0" @click.prevent="add_new_rule()" class="btn-hide-shipping-rates-add-rule-large" href="#"><?php esc_html_e('Add a rule', 'hide-shipping-rates-for-woocommerce') ?></a>
-					<rule v-for="(rule, index) in rules" :key="rule.id" :rule="rule" :number="index"></rule>
+
+					<div class="hide-shipping-rates-rules-container" v-sortable="{options: {handle: '.rule-move-handle'}}" @end="onOrderChange">
+						<rule v-for="(rule, index) in rules" :key="rule.id" :rule="rule" :number="index"></rule>
+					</div>
+
 					<a v-if="rules.length > 0" @click.prevent="add_new_rule()" class="button btn-hide-shipping-rates-add-rule" href="#"><?php esc_html_e('Add another rule', 'hide-shipping-rates-for-woocommerce') ?></a>
 				</div>
 			</td>
