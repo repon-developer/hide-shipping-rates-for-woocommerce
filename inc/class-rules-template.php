@@ -17,10 +17,10 @@ final class Rules_Template {
 	public function __construct() {
 		add_action('hide_shipping_rates/rule_templates', array($this, 'between_dates'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'between_times'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'add_billing_zipcode_template'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'add_billing_state_template'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'add_shipping_zipcode_template'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'add_shipping_state_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'billing_zipcode_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'billing_state_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_zipcode_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_state_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'customer_roles'));
 	}
 
@@ -62,7 +62,7 @@ final class Rules_Template {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function add_billing_zipcode_template() { ?>
+	public function billing_zipcode_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'billing:zipcode'">
 			<select>
 				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
@@ -81,7 +81,7 @@ final class Rules_Template {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function add_billing_state_template() { ?>
+	public function billing_state_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'billing:state'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
@@ -107,13 +107,13 @@ final class Rules_Template {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function add_shipping_zipcode_template() { ?>
+	public function shipping_zipcode_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'shipping:zipcode'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 			</select>
 
-			<input style="width: 400px;" type="text" v-model="zipcodes" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
+			<input style="flex: 1" type="text" v-model="zipcodes" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
 
 			<?php Utils::field_lock_message(); ?>
 		</div>
@@ -126,7 +126,7 @@ final class Rules_Template {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function add_shipping_state_template() { ?>
+	public function shipping_state_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'shipping:state'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>

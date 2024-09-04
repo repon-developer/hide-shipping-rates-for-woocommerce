@@ -21,7 +21,7 @@ final class Admin {
 		add_action('admin_footer', array($this, 'add_vue_component'));
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
 		add_action('admin_enqueue_scripts', array($this, 'register_scripts'), 1);
-		// add_action('wp_ajax_advanced_rule_based_shipping/get_select2_data', array($this, 'get_select2_data'));
+		add_action('wp_ajax_hide_shipping_rates/get_select2_data', array($this, 'get_select2_data'));
 	}
 
 	/**
@@ -121,7 +121,7 @@ final class Admin {
 		wp_localize_script('hide-shipping-rates', 'hide_shipping_rates_admin', array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'countries' => $wc_countries->get_countries(),
-			'nonce_select2' => wp_create_nonce('_nonce_advanced_rule_based_shipping/get_select2_data'),
+			'nonce_select2' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
 			'i10n' => array(
 				'delete_rule_warning' => __('Do you want to delete this shipping rule?', 'hide-shipping-rates-for-woocommerce'),
 				'delete_condition_warning' => __('Do you want to delete this condition?', 'hide-shipping-rates-for-woocommerce'),
@@ -144,7 +144,7 @@ final class Admin {
 			return;
 		}
 
-		echo '<template id="component-shipping-rate-rule">';
+		echo '<template id="component-hide-shipping-rates-rule">';
 		include_once HIDE_SHIPPING_RATES_PATH . '/templates/shipping-rate-rule.php';
 		echo '</template>';
 	}
@@ -162,7 +162,7 @@ final class Admin {
 			));
 		}
 
-		check_ajax_referer('_nonce_advanced_rule_based_shipping/get_select2_data', 'security');
+		check_ajax_referer('_nonce_hide_shipping_rates/get_select2_data', 'security');
 
 		$results = array();
 		$search_args = array();

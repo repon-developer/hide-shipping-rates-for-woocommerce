@@ -75,7 +75,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 		</select>
 
 		<?php $placeholder = __('Example: Chicago, New York', 'advanced-coupon-for-woocommerce'); ?>
-		<input style="flex: 1;" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+		<input style="min-width: 400px;" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
 	</template>
 
 	<template v-if="type == 'shipping:city'">
@@ -84,7 +84,7 @@ $condition_groups = Utils::get_condition_groups(); ?>
 		</select>
 
 		<?php $placeholder = __('Example: Chicago, New York', 'advanced-coupon-for-woocommerce'); ?>
-		<input style="width: 400px;" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+		<input style="min-width: 400px;" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
 	</template>
 
 	<template v-if="type == 'billing:country'">
@@ -109,10 +109,10 @@ $condition_groups = Utils::get_condition_groups(); ?>
 
 	<?php do_action('hide_shipping_rates/rule_templates'); ?>
 
-	<div class="rule-action-tools">
+	<!-- <div class="rule-action-tools">
 		<span class="rule-move-handle dashicons dashicons-menu-alt"></span>
 		<a href="#" class="btn-condition-delete dashicons dashicons-no-alt" @click.prevent="delete_item()"></a>
-	</div>
+	</div> -->
 
 
 </fieldset>

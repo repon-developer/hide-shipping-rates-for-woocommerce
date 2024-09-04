@@ -18,7 +18,7 @@
 		});
 	}
 
-	const rule_params = wp.hooks.applyFilters('hide_shipping_rates_condition_params', {
+	const rule_params = wp.hooks.applyFilters('hide_shipping_rates_rule_params', {
 		value: '',
 		weekly_days: [],
 		logged_in: 'yes',
@@ -31,13 +31,13 @@
 		shipping_countries: [],
 	});
 
-	const rule_extra_params = wp.hooks.applyFilters('hide_shipping_rates_condition_extra_params', {
+	const rule_extra_params = wp.hooks.applyFilters('hide_shipping_rates_rule_extra_params', {
 		hold_customers: [],
 		loading_customers: true,
 	});
 
 	const Rule = {
-		template: '#component-shipping-rate-rule',
+		template: '#component-hide-shipping-rates-rule',
 
 		props: {
 			rule: {
@@ -93,7 +93,7 @@
 							term: params.term,
 							type: $(this).data('type'),
 							security: hide_shipping_rates_admin.nonce_select2,
-							action: 'advanced_rule_based_shipping/get_select2_data'
+							action: 'hide_shipping_rates/get_select2_data'
 						}
 					},
 					processResults: function (result) {
