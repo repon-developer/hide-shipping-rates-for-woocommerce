@@ -22,7 +22,7 @@ final class Admin {
 		add_action('admin_footer', array($this, 'add_vue_component'));
 		add_action('admin_enqueue_scripts', array($this, 'register_scripts'), 1);
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts_global'), 100);
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts_global'), 1);
 		add_action('wp_ajax_hide_shipping_rates/get_select2_data', array($this, 'get_select2_data'));
 	}
 
@@ -137,8 +137,21 @@ final class Admin {
 			return;
 		}
 
-		wp_enqueue_style('hide-shipping-rates-global', HIDE_SHIPPING_RATES_URI . 'assets/global.min.css', [], HIDE_SHIPPING_RATES_VERSION);		
+		$wc_countries = new \WC_Countries();
+
+		wp_enqueue_style('hide-shipping-rates-global', HIDE_SHIPPING_RATES_URI . 'assets/global.min.css', [], HIDE_SHIPPING_RATES_VERSION);
 		wp_enqueue_script('hide-shipping-rates-global', HIDE_SHIPPING_RATES_URI . 'assets/global.min.js', ['jquery'], HIDE_SHIPPING_RATES_VERSION, true);
+		wp_localize_script('hide-shipping-rates-global', 'hide_shipping_rates_admin', array(
+			'ajax_url' => admin_url('admin-ajax.php'),
+			'countries' => $wc_countries->get_countries(),
+			'nonce_select2' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
+			'i10n' => array(
+				'delete_rule_warning' => __('Do you want to delete this rule?', 'hide-shipping-rates-for-woocommerce'),
+			)
+		));
+
+
+
 		do_action('hide_shipping_rates/global_enqueue_script');
 	}
 
@@ -156,22 +169,12 @@ final class Admin {
 		wp_register_script('sortable', HIDE_SHIPPING_RATES_URI . 'assets/sortable.min.js', [], '1.15.2', true);
 		wp_register_script('vue-sortable', HIDE_SHIPPING_RATES_URI . 'assets/vue-sortable.js', ['hide-shipping-rates-vue', 'sortable'], '1.0.7', true);
 
-		$wc_countries = new \WC_Countries();
-
 		wp_register_style('select2', HIDE_SHIPPING_RATES_URI . 'assets/select2.min.css');
 		wp_enqueue_style('hide-shipping-rates', HIDE_SHIPPING_RATES_URI . 'assets/admin.min.css', ['select2'], HIDE_SHIPPING_RATES_VERSION);
 
 		do_action('hide_shipping_rates/admin_enqueue_scripts');
 
 		wp_enqueue_script('hide-shipping-rates', HIDE_SHIPPING_RATES_URI . 'assets/admin.min.js', ['jquery', 'hide-shipping-rates-vue', 'select2', 'vue-sortable'], HIDE_SHIPPING_RATES_VERSION, true);
-		wp_localize_script('hide-shipping-rates', 'hide_shipping_rates_admin', array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'countries' => $wc_countries->get_countries(),
-			'nonce_select2' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
-			'i10n' => array(
-				'delete_rule_warning' => __('Do you want to delete this rule?', 'hide-shipping-rates-for-woocommerce'),
-			)
-		));
 	}
 
 	/**
