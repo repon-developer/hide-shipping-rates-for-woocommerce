@@ -262,7 +262,7 @@
 
 		methods: {
 			show_get_pro_popup() {
-				$('#hide-shipping-rates-pro-modal').trigger('open')
+				$('#hide-shipping-rates-modal').trigger('open')
 			},
 
 			add_new_rule() {
@@ -317,26 +317,6 @@
 		}
 
 		initialize_rule_settings_field()
-	});
-
-
-	$('#hide-shipping-rates-pro-modal').on('open', function () {
-		$(this).addClass('modal-opened')
-	})
-
-	$('#hide-shipping-rates-pro-modal').on('close', function () {
-		$(this).removeClass('modal-opened')
-	})
-
-	$('#hide-shipping-rates-pro-modal [data-modal-close]').on('click', function (e) {
-		e.preventDefault();
-		$('#hide-shipping-rates-pro-modal').trigger('close')
-	})
-
-	$(document).keyup(function (e) {
-		if (e.key === "Escape") {
-			$('#hide-shipping-rates-pro-modal').trigger('close')
-		}
 	});
 
 })(jQuery)

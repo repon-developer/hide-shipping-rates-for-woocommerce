@@ -252,11 +252,11 @@ class Utils {
 					echo '<div class="locked-message locked-message-activate-license">';
 					$message = sprintf(
 						/* translators: %1$s: Link open, %2$s: Link close */
-						esc_html__('Please activate your license on the %1$sShipping Rules page%2$s for unlock this feature.', 'hide-shipping-rates-for-woocommerce'),
-						'<a href="' . esc_url(menu_page_url('hide-shipping-rates-for-woocommerce', false)) . '">',
+						esc_html__('Please activate your license for unlock this feature. %sClick here%s for activate license.', 'hide-shipping-rates-for-woocommerce'),
+						'<a href="#" class="btn-open-hide-shipping-rates-license-form">',
 						'</a>'
 					);
-					echo wp_kses($message, array('a' => array('href' => true,  'target' => true)));
+					echo wp_kses($message, array('a' => array('href' => true,  'target' => true, 'class' => true)));
 					echo '</div>';
 				}
 			} else {

@@ -20,8 +20,9 @@ final class Admin {
 
 		add_action('admin_footer', array($this, 'output_modal'));
 		add_action('admin_footer', array($this, 'add_vue_component'));
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
 		add_action('admin_enqueue_scripts', array($this, 'register_scripts'), 1);
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts_global'), 100);
 		add_action('wp_ajax_hide_shipping_rates/get_select2_data', array($this, 'get_select2_data'));
 	}
 
@@ -117,7 +118,32 @@ final class Admin {
 	}
 
 	/**
-	 * Enqueue script on backend
+	 * Enqueue script on dashboard
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function enqueue_scripts_global() {
+		$screen_matched = false;
+		if ('woocommerce_page_wc-settings' === get_current_screen()->id && isset($_GET['tab']) && 'shipping' === $_GET['tab']) {
+			$screen_matched = true;
+		}
+
+		if ('plugins' === get_current_screen()->id) {
+			$screen_matched = true;
+		}
+
+		if (!$screen_matched) {
+			return;
+		}
+
+		wp_enqueue_style('hide-shipping-rates-global', HIDE_SHIPPING_RATES_URI . 'assets/global.min.css', [], HIDE_SHIPPING_RATES_VERSION);		
+		wp_enqueue_script('hide-shipping-rates-global', HIDE_SHIPPING_RATES_URI . 'assets/global.min.js', ['jquery'], HIDE_SHIPPING_RATES_VERSION, true);
+		do_action('hide_shipping_rates/global_enqueue_script');
+	}
+
+	/**
+	 * Enqueue script on shipping page
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -160,11 +186,9 @@ final class Admin {
 		} ?>
 
 		<?php if (!Utils::has_pro_installed()) : ?>
-			<div id="hide-shipping-rates-pro-modal">
+			<div id="hide-shipping-rates-modal">
 				<div class="modal-body">
 					<a href="#" class="btn-modal-close dashicons dashicons-no-alt" data-modal-close></a>
-
-
 					<span class="modal-icon dashicons dashicons-lock"></span>
 
 					<div class="modal-pro-missing">
@@ -180,7 +204,7 @@ final class Admin {
 					</div>
 
 					<div class="modal-footer">
-						<a class="button" data-modal-close href="#"><?php esc_html_e('Back', 'hide-shipping-rates-for-woocommerce'); ?></a>
+						<a class="button" data-modal-close href="#"><?php esc_html_e('Close', 'hide-shipping-rates-for-woocommerce'); ?></a>
 						<a class="button button-get-pro" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/" target="_blank"><?php esc_html_e('Get Pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
 					</div>
 				</div>
@@ -188,19 +212,15 @@ final class Admin {
 		<?php endif; ?>
 
 		<?php if (!Utils::is_pro_activated()) : ?>
-			<div id="hide-shipping-rates-pro-modal">
+			<div id="hide-shipping-rates-modal">
 				<div class="modal-body">
 					<a href="#" class="btn-modal-close dashicons dashicons-no-alt" data-modal-close></a>
-					<span class="modal-icon dashicons dashicons-lock"></span>
-
 					<div class="modal-pro-deactivated">
-						<?php
-						esc_html_e('You have installed "Hide Shipping Rates for WooCommerce Pro" plugin. Please activated this plugin.', 'hide-shipping-rates-for-woocommerce');
-						?>
+						<?php esc_html_e('Please activate the "Hide Shipping Rates for WooCommerce Pro" plugin on the plugins page.', 'hide-shipping-rates-for-woocommerce'); ?>
 					</div>
 
 					<div class="modal-footer">
-						<a class="button" data-modal-close href="#"><?php esc_html_e('Back', 'hide-shipping-rates-for-woocommerce'); ?></a>
+						<a class="button" data-modal-close href="#"><?php esc_html_e('Close', 'hide-shipping-rates-for-woocommerce'); ?></a>
 					</div>
 				</div>
 			</div>
