@@ -22,6 +22,30 @@ class Utils {
 	}
 
 	/**
+	 * Check if pro plugin activated
+	 * 
+	 * @since 1.0.0
+	 * @return boolean
+	 */
+	public static function is_pro_activated() {
+		return class_exists('\Hide_Shipping_Rates_Pro\Main');
+	}
+
+	/**
+	 * Check if pro plugin activated the license
+	 * 
+	 * @since 1.0.0
+	 * @return boolean
+	 */
+	public static function license_activated() {
+		if (!class_exists('\Hide_Shipping_Rates_Pro\Upgrade')) {
+			return false;
+		}
+
+		return \Hide_Shipping_Rates_Pro\Upgrade::license_activated();
+	}
+
+	/**
 	 * Get condition operators
 	 * 
 	 * @since 1.0.0

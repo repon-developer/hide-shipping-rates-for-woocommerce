@@ -18,6 +18,7 @@ final class Admin {
 		add_action('woocommerce_init', array($this, 'add_rule_settings_field'));
 		add_filter('woocommerce_generate_hide_shipping_rates_rules_settings_html', array($this, 'shipping_rules_settings_field_output'), 10, 4);
 
+		add_action('admin_footer', array($this, 'output_modal'));
 		add_action('admin_footer', array($this, 'add_vue_component'));
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
 		add_action('admin_enqueue_scripts', array($this, 'register_scripts'), 1);
@@ -46,7 +47,7 @@ final class Admin {
 	public function add_hide_shipping_rates_fields($settings) {
 		$settings['hide_shipping_rates_rules_settings'] = array(
 			'default' => '',
-			'title' => esc_html__('Hide this shipping rate if match below rule(s).', 'hide-shipping-rates-for-woocommerce'),
+			'title' => esc_html__('Hide this shipping rate if match rule(s).', 'hide-shipping-rates-for-woocommerce'),
 			'id' => 'hide_shipping_rates_rules_settings',
 			'type' => 'hide_shipping_rates_rules_settings',
 		);
@@ -89,12 +90,15 @@ final class Admin {
 						</label>
 					</div>
 
-					<a v-if="rules.length > 0" @click.prevent="add_new_rule()" class="button btn-hide-shipping-rates-add-rule" href="#"><?php esc_html_e('Add another rule', 'hide-shipping-rates-for-woocommerce') ?></a>
+					<a v-if="rules.length > 0" @click.prevent="add_new_rule()" class="button btn-hide-shipping-rates-add-rule" href="#">
+						<span class="dashicons dashicons-lock" v-if="rules.length >= max_free_rule_item && !has_pro()"></span>
+						<?php esc_html_e('Add another rule', 'hide-shipping-rates-for-woocommerce') ?>
+					</a>
 				</div>
 			</td>
 		</tr>
 
-<?php
+	<?php
 		return ob_get_clean();
 	}
 
@@ -142,6 +146,66 @@ final class Admin {
 				'delete_rule_warning' => __('Do you want to delete this rule?', 'hide-shipping-rates-for-woocommerce'),
 			)
 		));
+	}
+
+	/**
+	 * Output plugin modal
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function output_modal() {
+		if ('woocommerce_page_wc-settings' !== get_current_screen()->id || !isset($_GET['tab']) || 'shipping' !== $_GET['tab']) {
+			return;
+		} ?>
+
+		<?php if (!Utils::has_pro_installed()) : ?>
+			<div id="hide-shipping-rates-pro-modal">
+				<div class="modal-body">
+					<a href="#" class="btn-modal-close dashicons dashicons-no-alt" data-modal-close></a>
+
+
+					<span class="modal-icon dashicons dashicons-lock"></span>
+
+					<div class="modal-pro-missing">
+						<?php
+						$text = sprintf(
+							/* translators: %s for link */
+							esc_html__('For adding more rule, please get a pro version from %s.', 'hide-shipping-rates-for-woocommerce'),
+							'<a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/">' . esc_html__('here', 'hide-shipping-rates-for-woocommerce') . '</a>'
+						);
+
+						echo wp_kses($text, array('a' => array('href' => true, 'target' => true)));
+						?>
+					</div>
+
+					<div class="modal-footer">
+						<a class="button" data-modal-close href="#"><?php esc_html_e('Back', 'hide-shipping-rates-for-woocommerce'); ?></a>
+						<a class="button button-get-pro" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/" target="_blank"><?php esc_html_e('Get Pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
+					</div>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<?php if (!Utils::is_pro_activated()) : ?>
+			<div id="hide-shipping-rates-pro-modal">
+				<div class="modal-body">
+					<a href="#" class="btn-modal-close dashicons dashicons-no-alt" data-modal-close></a>
+					<span class="modal-icon dashicons dashicons-lock"></span>
+
+					<div class="modal-pro-deactivated">
+						<?php
+						esc_html_e('You have installed "Hide Shipping Rates for WooCommerce Pro" plugin. Please activated this plugin.', 'hide-shipping-rates-for-woocommerce');
+						?>
+					</div>
+
+					<div class="modal-footer">
+						<a class="button" data-modal-close href="#"><?php esc_html_e('Back', 'hide-shipping-rates-for-woocommerce'); ?></a>
+					</div>
+				</div>
+			</div>
+		<?php endif; ?>
+<?php
 	}
 
 	/**

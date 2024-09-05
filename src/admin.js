@@ -1,6 +1,6 @@
 (function ($) {
 
-	const has_pro = wp.hooks.applyFilters('hide_shipping_rates_has_pro', true);
+	const has_pro = wp.hooks.applyFilters('hide_shipping_rates_has_pro', false);
 
 	function get_uid(random_number = 66) {
 		var d = new Date().getTime() + random_number;
@@ -236,7 +236,6 @@
 			return {
 				rules: [],
 				match_type: 'all',
-				show_get_pro_message: false
 			}
 		},
 
@@ -255,22 +254,28 @@
 					match_type: this.match_type
 				});
 			},
+
+			max_free_rule_item() {
+				return 2;
+			}
 		},
 
 		methods: {
+			show_get_pro_popup() {
+				$('#hide-shipping-rates-pro-modal').trigger('open')
+			},
+
 			add_new_rule() {
-				if (this.rules.length >= 4 && has_pro === false) {
-					this.show_get_pro_message = true;
-					return;
+				if (this.rules.length >= this.max_free_rule_item && has_pro === false) {
+					return this.show_get_pro_popup();
 				}
 
 				this.rules.push({})
 			},
 
 			duplicate_rule(rule_no) {
-				if (this.rules.length >= 4 && has_pro === false) {
-					this.show_get_pro_message = true;
-					return;
+				if (this.rules.length >= this.max_free_rule_item && has_pro === false) {
+					return this.show_get_pro_popup();
 				}
 
 				const rule = JSON.parse(JSON.stringify(this.rules[rule_no]));
@@ -315,5 +320,23 @@
 	});
 
 
+	$('#hide-shipping-rates-pro-modal').on('open', function () {
+		$(this).addClass('modal-opened')
+	})
+
+	$('#hide-shipping-rates-pro-modal').on('close', function () {
+		$(this).removeClass('modal-opened')
+	})
+
+	$('#hide-shipping-rates-pro-modal [data-modal-close]').on('click', function (e) {
+		e.preventDefault();
+		$('#hide-shipping-rates-pro-modal').trigger('close')
+	})
+
+	$(document).keyup(function (e) {
+		if (e.key === "Escape") {
+			$('#hide-shipping-rates-pro-modal').trigger('close')
+		}
+	});
 
 })(jQuery)
