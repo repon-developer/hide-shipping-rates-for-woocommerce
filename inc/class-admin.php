@@ -150,9 +150,7 @@ final class Admin {
 			)
 		));
 
-
-
-		do_action('hide_shipping_rates/global_enqueue_script');
+		do_action('hide_shipping_rates/global_enqueue_scripts');
 	}
 
 	/**
