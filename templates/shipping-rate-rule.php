@@ -6,26 +6,25 @@ if (!defined('ABSPATH')) {
 
 use Hide_Shipping_Rates\Utils;
 
-$condition_groups = Utils::get_condition_groups(); ?>
+$rule_groups = Utils::get_rule_groups(); ?>
 
 <fieldset class="hide-shipping-rates-rule-item">
 	<select class="rule-type" v-model="type">
 		<?php
-		foreach ($condition_groups as $group_key => $group_label) {
-			$conditions = Utils::get_conditions_by_group($group_key);
-			if (count($conditions) == 0) {
+		foreach ($rule_groups as $group_key => $group_label) {
+			$rule_types = Utils::get_types_by_group($group_key);
+			if (count($rule_types) == 0) {
 				continue;
 			}
 
 			echo '<optgroup label="' . esc_attr($group_label) . '">';
-			foreach ($conditions as $key => $condition) {
-				echo '<option value="' . esc_attr($key) . '">' . esc_html($condition['label']) . ' </option>';
+			foreach ($rule_types as $key => $rule_type) {
+				echo '<option value="' . esc_attr($key) . '">' . esc_html($rule_type['label']) . ' </option>';
 			}
 			echo '</optgroup>';
 		}
 		?>
 	</select>
-
 
 	<template v-if="['cart:subtotal', 'cart:total_quantity', 'cart:total_weight'].includes(type)">
 		<select v-model="operator">

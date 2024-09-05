@@ -51,7 +51,7 @@ class Utils {
 	}
 
 	/**
-	 * Get condition operators dropdown
+	 * Get rule operators dropdown
 	 * 
 	 * @since 1.0.0
 	 * @return array
@@ -71,30 +71,30 @@ class Utils {
 	}
 
 	/**
-	 * Group of condition of tier discount
+	 * Group of rule types
 	 * 
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public static function get_condition_groups() {
-		return apply_filters('hide_shipping_rates/condition_groups', array(
+	public static function get_rule_groups() {
+		return apply_filters('hide_shipping_rates/rule_type_groups', array(
 			'cart' => __('Cart', 'hide-shipping-rates-for-woocommerce'),
 			'date' => __('Date', 'hide-shipping-rates-for-woocommerce'),
 			'billing' => __('Billing', 'hide-shipping-rates-for-woocommerce'),
 			'shipping' => __('Shipping', 'hide-shipping-rates-for-woocommerce'),
 			'customer' => __('Customer', 'hide-shipping-rates-for-woocommerce'),
-			'custom' => __('Custom', 'hide-shipping-rates-for-woocommerce'),
+			'others' => __('Others', 'hide-shipping-rates-for-woocommerce'),
 		));
 	}
 
 	/**
-	 * Get condition item of groups
+	 * Get types of rule
 	 * 
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public static function get_all_conditions() {
-		return apply_filters('hide_shipping_rates/condition_groups', array(
+	public static function get_rule_types() {
+		return apply_filters('hide_shipping_rates/rule_types', array(
 			'cart:subtotal' => array(
 				'group' => 'cart',
 				'priority' => 10,
@@ -193,29 +193,26 @@ class Utils {
 	}
 
 	/**
-	 * Get conditions of group
+	 * Get rule types of group
 	 * 
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public static function get_conditions_by_group($group) {
-		$all_conditions = self::get_all_conditions();
-
-		$group_conditions = [];
-
-		foreach ($all_conditions as $key => $condition) {
-			if ($group !== $condition['group']) {
+	public static function get_types_by_group($group) {
+		$group_types = [];
+		foreach (self::get_rule_types() as $key => $type) {
+			if ($group !== $type['group']) {
 				continue;
 			}
 
-			$group_conditions[$key] = $condition;
+			$group_types[$key] = $type;
 		}
 
-		uasort($group_conditions, function ($a, $b) {
+		uasort($group_types, function ($a, $b) {
 			return $a['priority'] > $b['priority'] ? 1 : -1;
 		});
 
-		return $group_conditions;
+		return $group_types;
 	}
 
 	/**

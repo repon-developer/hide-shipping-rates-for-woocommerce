@@ -33,7 +33,7 @@ final class Admin {
 	public function add_rule_settings_field() {
 		$methods = WC()->shipping()->load_shipping_methods();
 		foreach ($methods as $method) {
-			add_filter('woocommerce_shipping_instance_form_fields_' . $method->id, array($this, 'add_hide_shipping_rate_field_types'), 10000);
+			add_filter('woocommerce_shipping_instance_form_fields_' . $method->id, array($this, 'add_hide_shipping_rates_fields'), 10000);
 		}
 	}
 
@@ -43,7 +43,7 @@ final class Admin {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function add_hide_shipping_rate_field_types($settings) {
+	public function add_hide_shipping_rates_fields($settings) {
 		$settings['hide_shipping_rates_rules_settings'] = array(
 			'default' => '',
 			'title' => esc_html__('Hide this shipping rate if match below rule(s).', 'hide-shipping-rates-for-woocommerce'),
