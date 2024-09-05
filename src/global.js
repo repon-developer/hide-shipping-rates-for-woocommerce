@@ -18,7 +18,7 @@
 		}
 	});
 
-	$('.btn-open-hide-shipping-rates-license-form').on('click', function (e) {
+	$('body').on('click', '.btn-open-hide-shipping-rates-license-form', function (e) {
 		e.preventDefault();
 		$('#hide-shipping-rates-modal').trigger('open')
 	})

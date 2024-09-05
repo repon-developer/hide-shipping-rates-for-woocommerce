@@ -260,12 +260,12 @@ class Utils {
 					echo '</div>';
 				}
 			} else {
-				echo '<div class="locked-message locked-message-activate">';
+				echo '<div class="locked-message locked-message-deactivate">';
 				esc_html_e('Please activate the "Hide Shipping Rates for WooCommerce Pro" plugin.', 'hide-shipping-rates-for-woocommerce');
 				echo '</div>';
 			}
 		} else {
-			echo '<div class="locked-message">Get the <a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/">pro version</a> for unlock this feature.</div>';
+			echo '<div class="locked-message locked-message-get-pro">Get the <a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/">pro version</a> for unlock this feature.</div>';
 		}
 	}
 }
