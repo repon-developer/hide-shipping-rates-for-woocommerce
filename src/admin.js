@@ -127,7 +127,7 @@
 				}
 			})
 
-			wp.hooks.doAction('hide_shipping_rates_condition_updated', self);
+			wp.hooks.doAction('hide_shipping_rates_rule_updated', self);
 		},
 
 		watch: {

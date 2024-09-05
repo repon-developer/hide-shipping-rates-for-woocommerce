@@ -236,8 +236,8 @@ class Utils {
 					echo '</div>';
 				}
 			} else {
-				echo '<div class="locked-message">';
-				esc_html_e('Please activate the Advanced Rule Based Shipping Pro plugin.', 'hide-shipping-rates-for-woocommerce');
+				echo '<div class="locked-message locked-message-activate">';
+				esc_html_e('Please activate the "Hide Shipping Rates for WooCommerce Pro" plugin.', 'hide-shipping-rates-for-woocommerce');
 				echo '</div>';
 			}
 		} else {

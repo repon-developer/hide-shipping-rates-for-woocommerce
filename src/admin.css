@@ -149,13 +149,21 @@
 	position: relative;
 }
 
-.hide-shipping-rates-pro-field .locked-message {
+#hide-shipping-rates-rules-field .locked-message {
 	position: absolute;
 	inset: 0;
 	min-width: 285px;
 	line-height: 34px;
 	padding: 2px 10px;
 	background-color: rgba(255, 255, 255, 0.8);
+}
+
+#hide-shipping-rates-rules-field .locked-message.locked-message-activate {
+	min-width: 480px;
+}
+
+#hide-shipping-rates-rules-field .input-flex1 {
+	flex: 1;
 }
 
 #hide-shipping-rates-rules-field .select2-container {
@@ -207,6 +215,7 @@
 #hide-shipping-rates-rules-field .select2-search--inline .select2-search__field {
 	margin: 0;
 	height: 22px;
+	padding: 0;
 	min-height: 0 !important;
 	min-width: 0 !important;
 	width: 100% !important;
@@ -264,7 +273,7 @@
 	align-items: center;
 }
 
-#hide-shipping-rates-rules-field .input-field-loading {
+#hide-shipping-rates-rules-field .loading-indicator {
 	position: relative;
 	width: 18px;
 	margin-left: 3px;
@@ -272,7 +281,7 @@
 	aspect-ratio: 1 / 1;
 }
 
-#hide-shipping-rates-rules-field .input-field-loading:after {
+#hide-shipping-rates-rules-field .loading-indicator:after {
 	content: "";
 	position: absolute;
 	width: 100%;

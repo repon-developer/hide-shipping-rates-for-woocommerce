@@ -39,7 +39,7 @@ $rule_groups = Utils::get_rule_groups(); ?>
 			<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 		</select>
 
-		<div class="input-field-loading" v-if="loading_shipping_classes"></div>
+		<div class="loading-indicator" v-if="loading_shipping_classes"></div>
 		<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="shipping_classes" data-type="shipping_classes">
 			<option v-for="shipping_class in get_ui_data_items('hold_shipping_classes')" :value="shipping_class.id" :selected="shipping_classes.includes(shipping_class.id.toString())">{{shipping_class.name}}</option>
 		</select>
@@ -50,7 +50,7 @@ $rule_groups = Utils::get_rule_groups(); ?>
 			<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 		</select>
 
-		<div class="input-field-loading" v-if="loading_customers"></div>
+		<div class="loading-indicator" v-if="loading_customers"></div>
 		<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="customer_users" data-type="users">
 			<option v-for="user in get_ui_data_items('hold_customers')" :value="user.id" :selected="customer_users.includes(user.id.toString())">{{user.name}}</option>
 		</select>
