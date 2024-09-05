@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Condition class for template of options
+ * Rule Template class for rule type
  */
 final class Rules_Template {
 
@@ -68,7 +68,7 @@ final class Rules_Template {
 				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 			</select>
 
-			<input style="flex: 1;" type="text" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
+			<input class="input-flex1" type="text" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
 
 			<?php Utils::field_lock_message(); ?>
 		</div>
@@ -113,7 +113,7 @@ final class Rules_Template {
 				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
 			</select>
 
-			<input style="flex: 1" type="text" v-model="zipcodes" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
+			<input class="input-flex1" type="text" v-model="zipcodes" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
 
 			<?php Utils::field_lock_message(); ?>
 		</div>

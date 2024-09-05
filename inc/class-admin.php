@@ -55,7 +55,7 @@ final class Admin {
 	}
 
 	/**
-	 * Add new field below shipping method settings
+	 * Output new field below shipping method settings
 	 * 
 	 * @since 1.0.0
 	 * @return string
@@ -156,7 +156,7 @@ final class Admin {
 		}
 
 		echo '<template id="component-hide-shipping-rates-rule">';
-		include_once HIDE_SHIPPING_RATES_PATH . '/templates/shipping-rate-rule.php';
+		include_once HIDE_SHIPPING_RATES_PATH . '/inc/template-shipping-rate-rule.php';
 		echo '</template>';
 	}
 
@@ -240,6 +240,8 @@ final class Admin {
 				return array('id' => $code, 'name' => html_entity_decode($state));
 			}, $states, array_keys($states));
 		}
+
+		do_action('hide_shipping_rates/get_select2_data', $query_type, $search_term);
 
 		wp_send_json_success($results);
 	}
