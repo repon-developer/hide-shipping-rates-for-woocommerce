@@ -106,9 +106,9 @@ final class Admin {
 	 */
 	public function register_scripts() {
 		if (defined('HIDE_SHIPPING_RATES_DEV')) {
-			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.js', [], '3.4.21', true);
+			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.js', [], '3.5.1', true);
 		} else {
-			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.min.js', [], '3.4.21', true);
+			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.min.js', [], '3.5.1', true);
 		}
 	}
 

@@ -125,7 +125,7 @@
 
 .hide-shipping-rates-rule-item .rule-action-tools {
 	position: absolute;
-	top: 7px;
+	top: 0px;
 	right: 0;
 	bottom: 0;
 	z-index: 3000;
