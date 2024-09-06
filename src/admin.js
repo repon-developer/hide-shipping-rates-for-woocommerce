@@ -2,8 +2,8 @@
 
 	const has_pro = wp.hooks.applyFilters('hide_shipping_rates_has_pro', false);
 
-	function get_uid(random_number = 66) {
-		var d = new Date().getTime() + random_number;
+	function get_uid() {
+		var d = new Date().getTime();
 		var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
 			var r = Math.random() * 16;
@@ -101,10 +101,10 @@
 					},
 					processResults: function (result) {
 						return {
-							results: $.map(result.data, function (user) {
+							results: $.map(result.data, function (data) {
 								return {
-									text: user.name,
-									id: user.id
+									text: data.name,
+									id: data.id
 								}
 							})
 						};
@@ -135,7 +135,7 @@
 				this.pre_load_layout_data();
 			},
 
-			...wp.hooks.applyFilters('hide_shipping_rates_rule_watch', {})
+			...wp.hooks.applyFilters('hide_shipping_rates_rule_watch', {}, this)
 		},
 
 		methods: {
@@ -181,11 +181,12 @@
 						method: 'POST',
 						body: formData
 					}).then((response) => response.json()).then((result) => {
-						self.loading_shipping_classes = false;
 						if (result.success == true) {
 							self.hold_shipping_classes = result.data;
 						}
-					}).catch((e) => { })
+					}).finally(() => {
+						self.loading_shipping_classes = false;
+					})
 				})();
 
 				(function () {
@@ -212,13 +213,13 @@
 						method: 'POST',
 						body: formData
 					}).then((response) => response.json()).then((result) => {
-						self.loading_customers = false;
 						if (result.success == true) {
 							self.hold_customers = result.data;
 						}
-					}).catch((e) => { })
+					}).finally(() => {
+						self.loading_customers = false;
+					})
 				})();
-
 
 				wp.hooks.doAction('hide_shipping_rates_rule_preload', this);
 			},
@@ -249,10 +250,7 @@
 					})
 				})
 
-				return JSON.stringify({
-					rules,
-					match_type: this.match_type
-				});
+				return JSON.stringify({ ...this.$data, rules });
 			},
 
 			max_free_rule_item() {
@@ -279,7 +277,7 @@
 				}
 
 				const rule = JSON.parse(JSON.stringify(this.rules[rule_no]));
-				this.rules.push({ ...rule, collapse: false, id: get_uid(), })
+				this.rules.push({ ...rule, id: get_uid() })
 			},
 
 			onOrderChange(event) {

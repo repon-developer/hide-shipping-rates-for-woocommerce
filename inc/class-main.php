@@ -42,7 +42,7 @@ final class Main {
 	public $admin = null;
 
 	/**
-	 * Conditions template class
+	 * Rule template class
 	 * 
 	 * @since 1.0.0
 	 * @var Rules_Template
@@ -96,12 +96,16 @@ final class Main {
 	}
 
 	/**
-	 * Add add coupon link in plugin links
+	 * Add get pro link in plugin links
 	 * 
 	 * @since 1.0.1
 	 * @return array
 	 */
 	public function add_plugin_links($actions, $plugin_file) {
+		if (Utils::has_pro_installed()) {
+			return $actions;
+		}
+
 		if (HIDE_SHIPPING_RATES_BASENAME == $plugin_file) {
 			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
 			$actions = array_merge($new_links, $actions);

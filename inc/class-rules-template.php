@@ -25,7 +25,7 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add between dates template of condition
+	 * Add between dates template of rule
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -41,7 +41,7 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add between times template of condition template
+	 * Add between times template
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -57,7 +57,7 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add zipcode template of billing conditin
+	 * Add zipcode template of billing
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -76,7 +76,7 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add state of billing template of condition
+	 * Add state template of billing
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -102,7 +102,7 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add state template of condition
+	 * Add zipcode template of shipping
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -121,7 +121,7 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add state of shipping template of condition
+	 * Add state template of shipping
 	 * 
 	 * @since 1.0.0
 	 * @return void

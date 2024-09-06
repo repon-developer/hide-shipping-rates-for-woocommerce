@@ -46,7 +46,7 @@ class Utils {
 	}
 
 	/**
-	 * Get condition operators
+	 * Get rule operators
 	 * 
 	 * @since 1.0.0
 	 * @return array
@@ -240,15 +240,15 @@ class Utils {
 	}
 
 	/**
-	 * Free lock message
+	 * Pro field lock message
 	 * 
 	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function field_lock_message() {
 		if (self::has_pro_installed()) {
-			if (class_exists('\Hide_Shipping_Rates_Pro\Upgrade')) {
-				if (!\Hide_Shipping_Rates_Pro\Upgrade::license_activated()) {
+			if (self::is_pro_activated()) {
+				if (!self::license_activated()) {
 					echo '<div class="locked-message locked-message-activate-license">';
 					$message = sprintf(
 						/* translators: %1$s: Link open, %2$s: Link close */

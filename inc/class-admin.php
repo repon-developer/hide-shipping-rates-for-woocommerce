@@ -43,7 +43,7 @@ final class Admin {
 	 * Add new field below shipping method settings
 	 * 
 	 * @since 1.0.0
-	 * @return string
+	 * @return array
 	 */
 	public function add_hide_shipping_rates_fields($settings) {
 		$settings['hide_shipping_rates_rules_settings'] = array(
@@ -57,7 +57,7 @@ final class Admin {
 	}
 
 	/**
-	 * Output new field below shipping method settings
+	 * Output new field below the shipping method settings
 	 * 
 	 * @since 1.0.0
 	 * @return string
@@ -252,13 +252,7 @@ final class Admin {
 	 * @return void
 	 */
 	public function get_select2_data() {
-		if (!isset($_POST['security'])) {
-			wp_send_json_error(array(
-				'error' => __('Security Missing.', 'hide-shipping-rates-for-woocommerce')
-			));
-		}
-
-		check_ajax_referer('_nonce_hide_shipping_rates/get_select2_data', 'security');
+		check_ajax_referer('_nonce_hide_shipping_rates/get_select2_data', 'security');		
 
 		$results = array();
 		$search_args = array();
