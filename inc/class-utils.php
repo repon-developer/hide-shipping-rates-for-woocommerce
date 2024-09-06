@@ -12,6 +12,35 @@ if (!defined('ABSPATH')) {
 class Utils {
 
 	/**
+	 * Is plugin shipping screen
+	 * 
+	 * @since 1.0.0
+	 * @return boolean
+	 */
+	public static function is_shipping_screen() {
+		return ('woocommerce_page_wc-settings' === get_current_screen()->id && isset($_GET['tab']) && 'shipping' === $_GET['tab']);
+	}
+
+	/**
+	 * Is plugin screen
+	 * 
+	 * @since 1.0.0
+	 * @return boolean
+	 */
+	public static function is_plugin_screen() {
+		$screen_matched = false;
+		if ('woocommerce_page_wc-settings' === get_current_screen()->id && isset($_GET['tab']) && 'shipping' === $_GET['tab']) {
+			$screen_matched = true;
+		}
+
+		if ('plugins' === get_current_screen()->id) {
+			$screen_matched = true;
+		}
+
+		return $screen_matched;
+	}
+
+	/**
 	 * Check if pro version installed
 	 * 
 	 * @since 1.0.0

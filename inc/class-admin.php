@@ -124,16 +124,7 @@ final class Admin {
 	 * @return void
 	 */
 	public function enqueue_scripts_global() {
-		$screen_matched = false;
-		if ('woocommerce_page_wc-settings' === get_current_screen()->id && isset($_GET['tab']) && 'shipping' === $_GET['tab']) {
-			$screen_matched = true;
-		}
-
-		if ('plugins' === get_current_screen()->id) {
-			$screen_matched = true;
-		}
-
-		if (!$screen_matched) {
+		if (!Utils::is_plugin_screen()) {
 			return;
 		}
 
@@ -160,7 +151,7 @@ final class Admin {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		if (get_current_screen()->id !== 'woocommerce_page_wc-settings' || !isset($_GET['tab']) || 'shipping' !== $_GET['tab']) {
+		if (!Utils::is_shipping_screen()) {
 			return;
 		}
 
@@ -182,7 +173,7 @@ final class Admin {
 	 * @return void
 	 */
 	public function output_modal() {
-		if ('woocommerce_page_wc-settings' !== get_current_screen()->id || !isset($_GET['tab']) || 'shipping' !== $_GET['tab']) {
+		if (!Utils::is_shipping_screen()) {
 			return;
 		} ?>
 
@@ -236,7 +227,7 @@ final class Admin {
 	 * @return void
 	 */
 	public function add_vue_component() {
-		if (get_current_screen()->id !== 'woocommerce_page_wc-settings' || !isset($_GET['tab']) || 'shipping' !== $_GET['tab']) {
+		if (!Utils::is_shipping_screen()) {
 			return;
 		}
 
@@ -252,7 +243,7 @@ final class Admin {
 	 * @return void
 	 */
 	public function get_select2_data() {
-		check_ajax_referer('_nonce_hide_shipping_rates/get_select2_data', 'security');		
+		check_ajax_referer('_nonce_hide_shipping_rates/get_select2_data', 'security');
 
 		$results = array();
 		$search_args = array();
