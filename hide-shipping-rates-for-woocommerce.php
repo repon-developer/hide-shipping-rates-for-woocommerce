@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Hide Shipping Rates for WooCommerce
- * Description: 
+ * Description: Easily hide WooCommerce shipping rates based on cart total, weight, quantity, product class, address, and user roles to enhance checkout flexibility.
  * Version: 1.0.0
  * Author: Repon Hossain
  * Author URI: https://workwithrepon.com

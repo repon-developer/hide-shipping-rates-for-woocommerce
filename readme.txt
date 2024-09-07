@@ -1,45 +1,45 @@
-=== Hide Shipping Rates for WooCommerce Based on Rules ===
+=== Hide Shipping Rates for WooCommerce ===
 Contributors: repon.wp
-Tags: dynamic shipping, custom shipping, rules-based shipping
-Requires at least: 4.4.1
+Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping
+Requires at least: 5.0
 Tested up to: 6.6.1
 Stable tag: 1.0.0
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Advanced Rule Based Shipping for WooCommerce lets you set custom shipping costs based on cart total, quantities, weight, dates, addresses, and user roles.
+Easily hide WooCommerce shipping rates based on cart total, weight, quantity, product class, address, and user roles to enhance checkout flexibility.
 
 == Description ==
 
-Advanced Rule Based Shipping empowers WooCommerce store owners to create dynamic, customized shipping rates tailored to their specific needs. With this powerful plugin, you can set advanced shipping rules based on a variety of 
-conditions including cart total, item quantity, weight, dates, billing and shipping addresses, and user roles. Whether you need to offer special rates during holidays, adjust costs based on customer location, or differentiate pricing for wholesale customers, 
-this plugin makes it all possible.
+**Hide Shipping Rates for WooCommerce** is a powerful plugin designed to help WooCommerce store owners control the visibility of shipping rates based on various conditions. Whether you want to hide shipping rates when certain products are in the cart, or prevent shipping to certain locations based on cart total, this plugin gives you complete flexibility.
 
-== Key Features ==
+### Key Features:
+- **Hide Shipping Rates by Cart Total**: Hide shipping options when the cart total reaches or falls below a specified value.
+- **Hide Shipping Rates by Cart Weight**: Set weight-based conditions to hide certain shipping methods.
+- **Hide Shipping Rates by Cart Quantity**: Limit the number of products that trigger shipping rate visibility.
+- **Hide Shipping Rates by Product Shipping Class**: Restrict shipping methods based on product shipping classes.
+- **Hide Shipping Rates by Shipping/Billing Address**: Create location-based conditions to hide shipping methods.
+- **Hide Shipping Rates by User Roles**: Show or hide specific shipping methods depending on the user’s role (e.g., guest, customer, administrator).
+- **Flexible & Easy Setup**: Create rules quickly with an intuitive user interface.
 
-**Custom Shipping Rules:** Easily configure shipping rates based on cart total, item quantity, and total weight.
-**Date-Sensitive Shipping:** Set unique shipping options for holidays, weekends, or specific promotional periods.
-**Location-Based Shipping:** Adjust rates according to billing or shipping address details like country, state, city, or postal code.
-**User Role-Specific Rates:** Define shipping costs for different user roles such as customers, subscribers, and wholesalers.
-**Multi-Condition Rules:** Combine multiple conditions to create sophisticated and tailored shipping scenarios.
-**User-Friendly Interface:** Intuitive settings for quick and easy rule creation and management without coding.
-
-
-== Support ==
-For any issues or questions, please reach out through the support forum.
-
+**Take control of your WooCommerce shipping methods** and ensure a streamlined customer experience by hiding unnecessary or irrelevant shipping options.
 
 == Frequently Asked Questions ==
 
-= Can I create multiple rules for different shipping scenarios?
-Yes, you can create multiple rules to cover a wide range of shipping scenarios, giving you full control over your shipping costs.
+= Can I hide shipping rates based on specific products? =
+Yes, you can hide shipping rates based on product shipping classes.
 
-= Is international shipping supported?
-Yes, the plugin allows you to create rules based on the shipping address, including international locations.
+= Is it possible to hide shipping methods for certain user roles? =
+Absolutely! You can create rules to show or hide shipping rates based on user roles like administrators, customers, or guests.
 
-
+= How do I hide shipping rates for certain regions? =
+You can use the shipping or billing address condition to restrict rates for specific locations or countries.
 
 == Changelog ==
 
-= 1.0.0 2024-08-25 =
-* Initial release
+= 1.0.0 =
+* Initial release of Hide Shipping Rates for WooCommerce.
+
+
+== Support & Documentation ==
+For any issues or questions, please reach out through the support forum.
