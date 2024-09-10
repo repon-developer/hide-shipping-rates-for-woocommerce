@@ -294,7 +294,7 @@ class Utils {
 				echo '</div>';
 			}
 		} else {
-			echo '<div class="locked-message locked-message-get-pro">Get the <a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/">pro version</a> for unlock this feature.</div>';
+			echo '<div class="locked-message locked-message-get-pro">Get the <a target="_blank" :href="get_pro_link">pro version</a> for unlock this feature.</div>';
 		}
 	}
 }

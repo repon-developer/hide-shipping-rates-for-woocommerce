@@ -91,11 +91,6 @@ final class Rules_Template {
 				<option value=""><?php esc_html_e('Select a country', 'hide-shipping-rates-for-woocommerce'); ?></option>
 				<option v-for="(country, country_code) in get_countries()" :value="country_code">{{country}}</option>
 			</select>
-
-			<select ref="select2_ajax" multiple data-placeholder="<?php esc_html_e('Select states', 'hide-shipping-rates-for-woocommerce'); ?>">
-				<option value="state1">State one</option>
-				<option value="state1">State two</option>
-			</select>
 			<?php Utils::field_lock_message(); ?>
 		</div>
 	<?php
@@ -135,11 +130,6 @@ final class Rules_Template {
 			<select ref="select2_dropdown">
 				<option value=""><?php esc_html_e('Select a country', 'hide-shipping-rates-for-woocommerce'); ?></option>
 				<option v-for="(country, country_code) in get_countries()" :value="country_code">{{country}}</option>
-			</select>
-
-			<select ref="select2_ajax" multiple data-placeholder="<?php esc_html_e('Select states', 'hide-shipping-rates-for-woocommerce'); ?>">
-				<option value="state1">State one</option>
-				<option value="state1">State two</option>
 			</select>
 			<?php Utils::field_lock_message(); ?>
 		</div>

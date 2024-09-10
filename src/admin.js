@@ -60,6 +60,12 @@
 			}, this.rule)
 		},
 
+		computed: {
+			get_pro_link() {
+				return 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=field+type&utm_medium=shipping+methods&utm_term=' + this.type;
+			}
+		},
+
 		beforeMount() {
 			this.$root.rules[this.number] = this.$data;
 		},
@@ -254,7 +260,7 @@
 			},
 
 			max_free_rule_item() {
-				return 2;
+				return 4;
 			}
 		},
 

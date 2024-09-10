@@ -22,4 +22,5 @@
 		e.preventDefault();
 		$('#hide-shipping-rates-modal').trigger('open')
 	})
+
 })(jQuery)

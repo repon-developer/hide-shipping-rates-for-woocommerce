@@ -107,7 +107,7 @@ final class Main {
 		}
 
 		if (HIDE_SHIPPING_RATES_BASENAME == $plugin_file) {
-			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
+			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=get+pro+link&utm_medium=plugins+page', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
 			$actions = array_merge($new_links, $actions);
 		}
 

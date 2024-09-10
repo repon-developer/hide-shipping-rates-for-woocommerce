@@ -187,8 +187,8 @@ final class Admin {
 						<?php
 						$text = sprintf(
 							/* translators: %s for link */
-							esc_html__('For adding more rule, please get a pro version from %s.', 'hide-shipping-rates-for-woocommerce'),
-							'<a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/">' . esc_html__('here', 'hide-shipping-rates-for-woocommerce') . '</a>'
+							esc_html__('To add more rules, please get a pro version from %s.', 'hide-shipping-rates-for-woocommerce'),
+							'<a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=modal&utm_medium=shipping+methods">' . esc_html__('here', 'hide-shipping-rates-for-woocommerce') . '</a>'
 						);
 
 						echo wp_kses($text, array('a' => array('href' => true, 'target' => true)));
@@ -197,7 +197,7 @@ final class Admin {
 
 					<div class="modal-footer">
 						<a class="button" data-modal-close href="#"><?php esc_html_e('Close', 'hide-shipping-rates-for-woocommerce'); ?></a>
-						<a class="button button-get-pro" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/" target="_blank"><?php esc_html_e('Get Pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
+						<a class="button button-get-pro" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=modal&utm_medium=shipping+methods" target="_blank"><?php esc_html_e('Get Pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
 					</div>
 				</div>
 			</div>
