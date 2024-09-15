@@ -303,12 +303,12 @@ class Utils {
 	}
 
 	/**
-	 * Rule extra values for UI management
+	 * Get rule extra values for UI management
 	 * 
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public static function rule_extra_values() {
+	public static function get_rule_extra_values() {
 		return apply_filters('hide_shipping_rates/rule_extra_values', array(
 			'hold_customers' => [],
 			'loading_customers' => true,
@@ -318,12 +318,12 @@ class Utils {
 	}
 
 	/**
-	 * Rule values
+	 * Get rule values
 	 * 
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public static function rule_values() {
+	public static function get_rule_values() {
 		$rule_values = apply_filters('hide_shipping_rates/rule_values', array(
 			'value' => '',
 			'weekly_days' => [],
@@ -344,7 +344,7 @@ class Utils {
 			'value' => '',
 			'type' => 'cart:subtotal',
 			'operator' => 'less_than',
-		), self::rule_extra_values());
+		), self::get_rule_extra_values());
 	}
 
 	/**

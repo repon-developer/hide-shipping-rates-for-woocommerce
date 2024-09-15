@@ -133,7 +133,7 @@ final class Main {
 			}
 
 			$matched_rules = array_filter($rules, function ($rule) {
-				return apply_filters('hide_shipping_rates/rule_matched', false, $rule);
+				return apply_filters('hide_shipping_rates/rule_matched', false, wp_parse_args($rule, Utils::get_rule_values()));
 			});
 
 			//error_log(print_r($matched_rules, true));
