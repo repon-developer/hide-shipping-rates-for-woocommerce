@@ -136,7 +136,7 @@ final class Admin {
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'countries' => $wc_countries->get_countries(),
 			'rule_values' => Utils::get_rule_values(),
-			'rule_extra_values' => Utils::get_rule_extra_values(),
+			'rule_ui_values' => Utils::get_rule_ui_values(),
 			'nonce_select2' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
 			'i10n' => array(
 				'delete_rule_warning' => __('Do you want to delete this rule?', 'hide-shipping-rates-for-woocommerce'),

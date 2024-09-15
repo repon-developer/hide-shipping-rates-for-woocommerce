@@ -308,7 +308,7 @@ class Utils {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public static function get_rule_extra_values() {
+	public static function get_rule_ui_values() {
 		return apply_filters('hide_shipping_rates/rule_extra_values', array(
 			'hold_customers' => [],
 			'loading_customers' => true,
@@ -344,7 +344,7 @@ class Utils {
 			'value' => '',
 			'type' => 'cart:subtotal',
 			'operator' => 'less_than',
-		), self::get_rule_extra_values());
+		), self::get_rule_ui_values());
 	}
 
 	/**

@@ -35,7 +35,7 @@
 			return Object.assign({
 				id: get_uid(),
 				...hide_shipping_rates_admin.rule_values,
-				...hide_shipping_rates_admin.rule_extra_values,
+				...hide_shipping_rates_admin.rule_ui_values,
 			}, this.rule)
 		},
 
@@ -230,7 +230,7 @@
 				const rules = JSON.parse(JSON.stringify(this.rules));
 				rules.forEach((rule) => {
 					delete rule.id
-					Object.keys(hide_shipping_rates_admin.rule_extra_values).forEach((remove_key) => {
+					Object.keys(hide_shipping_rates_admin.rule_ui_values).forEach((remove_key) => {
 						delete rule[remove_key];
 					})
 				})
