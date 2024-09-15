@@ -107,7 +107,7 @@ final class Main {
 		}
 
 		if (HIDE_SHIPPING_RATES_BASENAME == $plugin_file) {
-			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=get+pro+link&utm_medium=plugins+page', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
+			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=plugins+page&utm_medium=get+pro+link', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
 			$actions = array_merge($new_links, $actions);
 		}
 
@@ -274,6 +274,7 @@ final class Main {
 	 * @return boolean
 	 */
 	public function date_rule_type($matched, $rule) {
+		//error_log(print_r($rule, true));
 		if ('date:weekly_days' === $rule['type']) {
 			$weekly_days = isset($rule['weekly_days']) && is_array($rule['weekly_days']) ? $rule['weekly_days'] : array();
 			$current_day = strtolower(current_time('l'));
@@ -285,6 +286,58 @@ final class Main {
 			if ('not_in_list' == $rule['operator'] && !in_array($current_day, $weekly_days)) {
 				return true;
 			}
+		}
+
+		if ('date:before_datetime' === $rule['type']) {
+			if (empty($rule['before_datetime'])) {
+				return $matched;
+			}
+
+			$before_datetime = strtotime($rule['before_datetime']);
+			if (false === $before_datetime) {
+				return $matched;
+			}
+
+			return current_time('timestamp') < $before_datetime;
+		}
+
+		if ('date:after_datetime' === $rule['type']) {
+			if (empty($rule['after_datetime'])) {
+				return $matched;
+			}
+
+			$after_datetime = strtotime($rule['after_datetime']);
+			if (false === $after_datetime) {
+				return $matched;
+			}
+
+			return current_time('timestamp') > $after_datetime;
+		}
+
+		if ('date:before_time' === $rule['type']) {
+			if (empty($rule['before_time'])) {
+				return $matched;
+			}
+
+			$before_time = strtotime($rule['before_time']);
+			if (false === $before_time) {
+				return $matched;
+			}
+
+			return current_time('timestamp') < $before_time;
+		}
+
+		if ('date:after_time' === $rule['type']) {
+			if (empty($rule['after_time'])) {
+				return $matched;
+			}
+
+			$after_time = strtotime($rule['after_time']);
+			if (false === $after_time) {
+				return $matched;
+			}
+
+			return current_time('timestamp') > $after_time;
 		}
 
 		return $matched;

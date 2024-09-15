@@ -15,13 +15,61 @@ final class Rules_Template {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action('hide_shipping_rates/rule_templates', array($this, 'between_dates'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'between_times'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'before_time'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'after_time'));
+
+		add_action('hide_shipping_rates/rule_templates', array($this, 'between_dates'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'before_datetime'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'after_datetime'));
+
 		add_action('hide_shipping_rates/rule_templates', array($this, 'billing_zipcode_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'billing_state_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_zipcode_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_state_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'customer_roles'));
+	}
+
+	/**
+	 * Add between times template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function between_times() { ?>
+		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:between_times'">
+			<input type="time">
+			<input type="time">
+
+			<?php Utils::field_lock_message(); ?>
+		</div>
+	<?php
+	}
+
+	/**
+	 * Add before time template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function before_time() { ?>
+		<template v-if="type == 'date:before_time'">
+			<input type="time" v-model="before_time">
+		</template>
+	<?php
+	}
+
+	/**
+	 * Add after time template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function after_time() { ?>
+		<template v-if="type == 'date:after_time'">
+			<input type="time" v-model="after_time">
+		</template>
+	<?php
 	}
 
 	/**
@@ -41,20 +89,31 @@ final class Rules_Template {
 	}
 
 	/**
-	 * Add between times template
+	 * Add before datetime rule
 	 * 
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function between_times() { ?>
-		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:between_times'">
-			<input type="time">
-			<input type="time">
-
-			<?php Utils::field_lock_message(); ?>
-		</div>
+	public function before_datetime() { ?>
+		<template v-if="type == 'date:before_datetime'">
+			<input type="datetime-local" v-model="before_datetime">
+		</template>
 	<?php
 	}
+
+	/**
+	 * Add after datetime rule
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function after_datetime() { ?>
+		<template v-if="type == 'date:after_datetime'">
+			<input type="datetime-local" v-model="after_datetime">
+		</template>
+	<?php
+	}
+
 
 	/**
 	 * Add zipcode template of billing

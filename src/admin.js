@@ -29,7 +29,11 @@
 		operator: 'less_than',
 		billing_countries: [],
 		shipping_countries: [],
-		shipping_classes: []
+		shipping_classes: [],
+		before_datetime: '',
+		after_datetime: '',
+		before_time: '',
+		after_time: '',
 	});
 
 	const rule_extra_params = wp.hooks.applyFilters('hide_shipping_rates_rule_extra_params', {

@@ -136,6 +136,7 @@ class Utils {
 			'billing' => __('Billing', 'hide-shipping-rates-for-woocommerce'),
 			'shipping' => __('Shipping', 'hide-shipping-rates-for-woocommerce'),
 			'customer' => __('Customer', 'hide-shipping-rates-for-woocommerce'),
+			'order_history' => __('Order History', 'hide-shipping-rates-for-woocommerce'),
 			'others' => __('Others', 'hide-shipping-rates-for-woocommerce'),
 		));
 	}
@@ -148,6 +149,8 @@ class Utils {
 	 */
 	public static function get_rule_types() {
 		return apply_filters('hide_shipping_rates/rule_types', array(
+
+			/** Cart related field types */
 			'cart:subtotal' => array(
 				'group' => 'cart',
 				'priority' => 10,
@@ -168,23 +171,45 @@ class Utils {
 				'priority' => 20,
 				'label' => __('Item Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
 			),
+
+			/** Date related field types */
 			'date:weekly_days' => array(
 				'group' => 'date',
 				'priority' => 10,
 				'label' => __('Weekly Days', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'date:between_dates' => array(
-				'group' => 'date',
-				'priority' => 15,
-				'is_pro' => true,
-				'label' => __('Between Dates', 'hide-shipping-rates-for-woocommerce'),
-			),
 			'date:between_times' => array(
 				'group' => 'date',
-				'priority' => 20,
+				'priority' => 15,
 				'label' => __('Between Times', 'hide-shipping-rates-for-woocommerce'),
 			),
+			'date:before_time' => array(
+				'group' => 'date',
+				'priority' => 20,
+				'label' => __('Before Time', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'date:after_time' => array(
+				'group' => 'date',
+				'priority' => 25,
+				'label' => __('After Time', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'date:between_dates' => array(
+				'group' => 'date',
+				'priority' => 30,
+				'label' => __('Between Dates', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'date:before_datetime' => array(
+				'group' => 'date',
+				'priority' => 35,
+				'label' => __('Before Date & Time', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'date:after_datetime' => array(
+				'group' => 'date',
+				'priority' => 40,
+				'label' => __('After Date & Time', 'hide-shipping-rates-for-woocommerce'),
+			),
 
+			/** Billing address related field types */
 			'billing:city' => array(
 				'group' => 'billing',
 				'priority' => 10,
@@ -206,6 +231,7 @@ class Utils {
 				'label' => __('Country', 'hide-shipping-rates-for-woocommerce'),
 			),
 
+			/** Shipping address related field types */
 			'shipping:city' => array(
 				'group' => 'shipping',
 				'priority' => 10,
@@ -227,6 +253,7 @@ class Utils {
 				'label' => __('Country', 'hide-shipping-rates-for-woocommerce'),
 			),
 
+			/** Customer related field types */
 			'customer:users' => array(
 				'group' => 'customer',
 				'priority' => 10,
