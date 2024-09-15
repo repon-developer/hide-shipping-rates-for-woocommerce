@@ -269,6 +269,13 @@ class Utils {
 				'priority' => 20,
 				'label' => __('Logged In', 'hide-shipping-rates-for-woocommerce'),
 			),
+
+			/** Order History related field types */
+			'order_history:first_purchase' => array(
+				'group' => 'order_history',
+				'priority' => 10,
+				'label' => __('First Purchase', 'hide-shipping-rates-for-woocommerce'),
+			),
 		));
 	}
 
@@ -293,6 +300,51 @@ class Utils {
 		});
 
 		return $group_types;
+	}
+
+	/**
+	 * Rule extra values for UI management
+	 * 
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function rule_extra_values() {
+		return apply_filters('hide_shipping_rates/rule_extra_values', array(
+			'hold_customers' => [],
+			'loading_customers' => true,
+			'hold_shipping_classes' => [],
+			'loading_shipping_classes' => true,
+		));
+	}
+
+	/**
+	 * Rule values
+	 * 
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function rule_values() {
+		$rule_values = apply_filters('hide_shipping_rates/rule_values', array(
+			'value' => '',
+			'weekly_days' => [],
+			'logged_in' => 'yes',
+			'customer_users' => [],
+			'billing_cities' => '',
+			'shipping_cities' => '',
+			'billing_countries' => [],
+			'shipping_countries' => [],
+			'shipping_classes' => [],
+			'before_datetime' => '',
+			'after_datetime' => '',
+			'before_time' => '',
+			'after_time' => '',
+		));
+
+		return array_merge($rule_values, array(
+			'value' => '',
+			'type' => 'cart:subtotal',
+			'operator' => 'less_than',
+		), self::rule_extra_values());
 	}
 
 	/**

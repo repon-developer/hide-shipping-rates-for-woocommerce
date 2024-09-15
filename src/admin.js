@@ -18,31 +18,6 @@
 		});
 	}
 
-	const rule_params = wp.hooks.applyFilters('hide_shipping_rates_rule_params', {
-		value: '',
-		weekly_days: [],
-		logged_in: 'yes',
-		customer_users: [],
-		billing_cities: '',
-		shipping_cities: '',
-		type: 'cart:subtotal',
-		operator: 'less_than',
-		billing_countries: [],
-		shipping_countries: [],
-		shipping_classes: [],
-		before_datetime: '',
-		after_datetime: '',
-		before_time: '',
-		after_time: '',
-	});
-
-	const rule_extra_params = wp.hooks.applyFilters('hide_shipping_rates_rule_extra_params', {
-		hold_customers: [],
-		loading_customers: true,
-		hold_shipping_classes: [],
-		loading_shipping_classes: true,
-	});
-
 	const Rule = {
 		template: '#component-hide-shipping-rates-rule',
 
@@ -59,8 +34,8 @@
 		data() {
 			return Object.assign({
 				id: get_uid(),
-				...rule_params,
-				...rule_extra_params
+				...hide_shipping_rates_admin.rule_values,
+				...hide_shipping_rates_admin.rule_extra_values,
 			}, this.rule)
 		},
 
@@ -255,7 +230,7 @@
 				const rules = JSON.parse(JSON.stringify(this.rules));
 				rules.forEach((rule) => {
 					delete rule.id
-					Object.keys(rule_extra_params).forEach((remove_key) => {
+					Object.keys(hide_shipping_rates_admin.rule_extra_values).forEach((remove_key) => {
 						delete rule[remove_key];
 					})
 				})

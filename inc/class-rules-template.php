@@ -28,6 +28,8 @@ final class Rules_Template {
 		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_zipcode_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_state_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'customer_roles'));
+
+		add_action('hide_shipping_rates/rule_templates', array($this, 'order_history_first_purchase'));
 	}
 
 	/**
@@ -195,7 +197,6 @@ final class Rules_Template {
 	<?php
 	}
 
-
 	/**
 	 * Add customer roles template
 	 * 
@@ -210,6 +211,24 @@ final class Rules_Template {
 
 			<select>
 				<option value="test">Administrator</option>
+			</select>
+
+			<?php Utils::field_lock_message(); ?>
+		</div>
+	<?php
+	}
+
+	/**
+	 * First purchase rule template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function order_history_first_purchase() { ?>
+		<div class="hide-shipping-rates-pro-field" v-if="type == 'order_history:first_purchase'">
+			<select>
+				<option value="yes"><?php esc_html_e('Yes', 'hide-shipping-rates-for-woocommerce'); ?></option>
+				<option value="no"><?php esc_html_e('No', 'hide-shipping-rates-for-woocommerce'); ?></option>
 			</select>
 
 			<?php Utils::field_lock_message(); ?>
