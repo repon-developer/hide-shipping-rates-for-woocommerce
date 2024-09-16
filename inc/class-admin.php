@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Admin class of the plugin
+ * Admin class
  */
 final class Admin {
 
