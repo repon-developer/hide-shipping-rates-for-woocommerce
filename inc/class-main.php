@@ -42,12 +42,12 @@ final class Main {
 	public $admin = null;
 
 	/**
-	 * Rule template class
+	 * Hold of rules classes
 	 * 
 	 * @since 1.0.0
-	 * @var Rules_Template
+	 * @var array
 	 */
-	public $rules_template = null;
+	public $rules = [];
 
 	/**
 	 * Constructor.
@@ -67,7 +67,11 @@ final class Main {
 	public function include_files() {
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-utils.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-admin.php';
-		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rules-template.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-cart.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-date.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-customer.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-order-history.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-billing-shipping.php';
 	}
 
 	/**
@@ -77,7 +81,11 @@ final class Main {
 	 */
 	public function init() {
 		$this->admin = new Admin();
-		$this->rules_template = new Rules_Template();
+		$this->rules['cart'] = new Rule\Cart();
+		$this->rules['date'] = new Rule\Date();
+		$this->rules['customer'] = new Rule\Customer();
+		$this->rules['order_history'] = new Rule\Order_History();
+		$this->rules['billing_shipping'] = new Rule\Billing_Shipping();
 	}
 
 	/**
@@ -88,11 +96,7 @@ final class Main {
 	 */
 	public function hooks() {
 		add_filter('plugin_action_links', array($this, 'add_plugin_links'), 10, 2);
-		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000);
-		add_filter('hide_shipping_rates/rule_matched', array($this, 'cart_rule_type'), 10, 2);
-		add_filter('hide_shipping_rates/rule_matched', array($this, 'date_rule_type'), 10, 2);
-		add_filter('hide_shipping_rates/rule_matched', array($this, 'customer_rule_type'), 10, 2);
-		add_filter('hide_shipping_rates/rule_matched', array($this, 'billing_shipping_rule_match'), 10, 2);
+		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000);		
 	}
 
 	/**
@@ -153,285 +157,7 @@ final class Main {
 		}
 
 		return $rates;
-	}
-
-	/**
-	 * Cart related rule filters
-	 * 
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	public function cart_rule_type($matched, $rule) {
-		if (!in_array($rule['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight', 'cart:product_shipping_classes'))) {
-			return $matched;
-		}
-
-		if (is_null(WC()->cart)) {
-			return $matched;
-		}
-
-		$operator = $rule['operator'];
-		$target_amount = floatval($rule['value']);
-
-		if ('cart:subtotal' === $rule['type']) {
-			$subtotal = (float) WC()->cart->get_subtotal();
-
-			if ('equal_to' === $operator && $subtotal == $target_amount) {
-				return true;
-			}
-
-			if ('less_than' === $operator && $subtotal < $target_amount) {
-				return true;
-			}
-
-			if ('less_than_or_equal' === $operator && $subtotal <= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than_or_equal' === $operator && $subtotal >= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than' === $operator && $subtotal > $target_amount) {
-				return true;
-			}
-		}
-
-		if ('cart:total_quantity' === $rule['type']) {
-			$quantity = WC()->cart->get_cart_contents_count();
-
-			if ('equal_to' === $operator && $quantity == $target_amount) {
-				return true;
-			}
-
-			if ('less_than' === $operator && $quantity < $target_amount) {
-				return true;
-			}
-
-			if ('less_than_or_equal' === $operator && $quantity <= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than_or_equal' === $operator && $quantity >= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than' === $operator && $quantity > $target_amount) {
-				return true;
-			}
-		}
-
-		if ('cart:total_weight' === $rule['type']) {
-			$weight = WC()->cart->cart_contents_weight;
-
-			if ('equal_to' === $operator && $weight == $target_amount) {
-				return true;
-			}
-
-			if ('less_than' === $operator && $weight < $target_amount) {
-				return true;
-			}
-
-			if ('less_than_or_equal' === $operator && $weight <= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than_or_equal' === $operator && $weight >= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than' === $operator && $weight > $target_amount) {
-				return true;
-			}
-		}
-
-		if ('cart:product_shipping_classes' === $rule['type']) {
-			$shipping_classes = isset($rule['shipping_classes']) && is_array($rule['shipping_classes']) ? $rule['shipping_classes'] : array();
-
-			$cart_products = WC()->cart->get_cart();
-			$product_shipping_classes = [];
-			foreach ($cart_products as $item) {
-				$product_shipping_classes[] = $item['data']->get_shipping_class_id();
-			}
-
-			$matched_items = array_intersect($shipping_classes, array_unique($product_shipping_classes));
-			if ('in_list' == $rule['operator'] && count($matched_items) > 0) {
-				return true;
-			}
-
-			if ('not_in_list' == $rule['operator'] && 0 === count($matched_items)) {
-				return true;
-			}
-		}
-
-		return $matched;
-	}
-
-	/**
-	 * Date related rule filters
-	 * 
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	public function date_rule_type($matched, $rule) {
-		//error_log(print_r($rule, true));
-		if ('date:weekly_days' === $rule['type']) {
-			$weekly_days = isset($rule['weekly_days']) && is_array($rule['weekly_days']) ? $rule['weekly_days'] : array();
-			$current_day = strtolower(current_time('l'));
-
-			if ('in_list' == $rule['operator'] && in_array($current_day, $weekly_days)) {
-				return true;
-			}
-
-			if ('not_in_list' == $rule['operator'] && !in_array($current_day, $weekly_days)) {
-				return true;
-			}
-		}
-
-		if ('date:before_datetime' === $rule['type']) {
-			if (empty($rule['before_datetime'])) {
-				return $matched;
-			}
-
-			$before_datetime = strtotime($rule['before_datetime']);
-			if (false === $before_datetime) {
-				return $matched;
-			}
-
-			return current_time('timestamp') < $before_datetime;
-		}
-
-		if ('date:after_datetime' === $rule['type']) {
-			if (empty($rule['after_datetime'])) {
-				return $matched;
-			}
-
-			$after_datetime = strtotime($rule['after_datetime']);
-			if (false === $after_datetime) {
-				return $matched;
-			}
-
-			return current_time('timestamp') > $after_datetime;
-		}
-
-		if ('date:before_time' === $rule['type']) {
-			if (empty($rule['before_time'])) {
-				return $matched;
-			}
-
-			$before_time = strtotime($rule['before_time']);
-			if (false === $before_time) {
-				return $matched;
-			}
-
-			return current_time('timestamp') < $before_time;
-		}
-
-		if ('date:after_time' === $rule['type']) {
-			if (empty($rule['after_time'])) {
-				return $matched;
-			}
-
-			$after_time = strtotime($rule['after_time']);
-			if (false === $after_time) {
-				return $matched;
-			}
-
-			return current_time('timestamp') > $after_time;
-		}
-
-		return $matched;
-	}
-
-	/**
-	 * Customer related rule filters
-	 * 
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	public function customer_rule_type($matched, $rule) {
-		$operator = $rule['operator'];
-
-		if ('customer:users' === $rule['type']) {
-			$customers = isset($rule['customer_users']) && is_array($rule['customer_users']) ? $rule['customer_users'] : array();
-			if ('in_list' === $operator && in_array(get_current_user_id(), $customers)) {
-				return true;
-			}
-
-			if ('not_in_list' === $operator && !in_array(get_current_user_id(), $customers)) {
-				return true;
-			}
-		}
-
-		if ('customer:logged_in' === $rule['type'] && 'yes' == $rule['logged_in']) {
-			return is_user_logged_in();
-		}
-
-		if ('customer:logged_in' === $rule['type'] && 'no' == $rule['logged_in']) {
-			return !is_user_logged_in();
-		}
-
-		return $matched;
-	}
-
-	/**
-	 * Billing & Shipping rule filters
-	 * 
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	public function billing_shipping_rule_match($matched, $rule) {
-		$operator = $rule['operator'];
-
-		if ('billing:city' === $rule['type']) {
-			$cities = $rule['billing_cities'] ?? '';
-			$cities = array_filter(array_map('trim', explode(',', strtolower($cities))));
-
-			$customer_city = strtolower(WC()->customer->get_billing_city());
-			if ('in_list' === $operator && in_array($customer_city, $cities)) {
-				return true;
-			}
-
-			if ('not_in_list' === $operator && !in_array($customer_city, $cities)) {
-				return true;
-			}
-		}
-
-		if ('shipping:city' === $rule['type']) {
-			$cities = $rule['shipping_cities'] ?? '';
-			$cities = array_filter(array_map('trim', explode(',', strtolower($cities))));
-
-			$customer_city = strtolower(WC()->customer->get_shipping_city());
-
-			if ('in_list' === $operator && in_array($customer_city, $cities)) {
-				return true;
-			}
-
-			if ('not_in_list' === $operator && !in_array($customer_city, $cities)) {
-				return true;
-			}
-		}
-
-		if ('billing:country' === $rule['type'] || 'shipping:country' === $rule['type']) {
-			$countries = isset($rule['shipping_countries']) && is_array($rule['shipping_countries']) ? $rule['shipping_countries'] : array();
-
-			$customer_country = WC()->customer->get_shipping_country();
-			if ('billing:country' === $rule['type']) {
-				$countries = isset($rule['billing_countries']) && is_array($rule['billing_countries']) ? $rule['billing_countries'] : array();
-				$customer_country = WC()->customer->get_billing_country();
-			}
-
-			if ('in_list' === $operator && in_array($customer_country, $countries)) {
-				return true;
-			}
-
-			if ('not_in_list' === $operator && !in_array($customer_country, $countries)) {
-				return true;
-			}
-		}
-
-		return $matched;
-	}
+	}	
 }
 
 Main::get_instance();

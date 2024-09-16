@@ -219,7 +219,7 @@ final class Admin {
 				</div>
 			</div>
 		<?php endif; ?>
-<?php
+	<?php
 	}
 
 	/**
@@ -233,9 +233,36 @@ final class Admin {
 			return;
 		}
 
-		echo '<template id="component-hide-shipping-rates-rule">';
-		include_once HIDE_SHIPPING_RATES_PATH . '/inc/template-shipping-rate-rule.php';
-		echo '</template>';
+		$rule_groups = Utils::get_rule_groups(); ?>
+
+		<template id="component-hide-shipping-rates-rule">
+			<fieldset class="hide-shipping-rates-rule-item">
+				<select class="rule-type" v-model="type">
+					<?php
+					foreach ($rule_groups as $group_key => $group_label) {
+						$rule_types = Utils::get_types_by_group($group_key);
+						if (count($rule_types) == 0) {
+							continue;
+						}
+
+						echo '<optgroup label="' . esc_attr($group_label) . '">';
+						foreach ($rule_types as $key => $rule_type) {
+							echo '<option value="' . esc_attr($key) . '">' . esc_html($rule_type['label']) . ' </option>';
+						}
+						echo '</optgroup>';
+					}
+					?>
+				</select>
+
+				<?php do_action('hide_shipping_rates/rule_templates'); ?>
+
+				<div class="rule-action-tools">
+					<span class="rule-move-handle dashicons dashicons-menu-alt"></span>
+					<a href="#" class="btn-condition-delete dashicons dashicons-no-alt" @click.prevent="delete_item()"></a>
+				</div>
+			</fieldset>
+		</template>
+<?php
 	}
 
 	/**

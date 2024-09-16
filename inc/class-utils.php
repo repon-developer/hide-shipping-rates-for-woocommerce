@@ -309,12 +309,7 @@ class Utils {
 	 * @return array
 	 */
 	public static function get_rule_ui_values() {
-		return apply_filters('hide_shipping_rates/rule_ui_values', array(
-			'hold_customers' => [],
-			'loading_customers' => true,
-			'hold_shipping_classes' => [],
-			'loading_shipping_classes' => true,
-		));
+		return apply_filters('hide_shipping_rates/rule_ui_values', array());
 	}
 
 	/**
@@ -324,21 +319,7 @@ class Utils {
 	 * @return array
 	 */
 	public static function get_rule_values() {
-		$rule_values = apply_filters('hide_shipping_rates/rule_values', array(
-			'value' => '',
-			'weekly_days' => [],
-			'logged_in' => 'yes',
-			'customer_users' => [],
-			'billing_cities' => '',
-			'shipping_cities' => '',
-			'billing_countries' => [],
-			'shipping_countries' => [],
-			'shipping_classes' => [],
-			'before_datetime' => '',
-			'after_datetime' => '',
-			'before_time' => '',
-			'after_time' => '',
-		));
+		$rule_values = apply_filters('hide_shipping_rates/rule_values', array());
 
 		return array_merge($rule_values, array(
 			'value' => '',
