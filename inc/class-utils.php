@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 class Utils {
 
 	/**
-	 * Is plugin shipping screen
+	 * Is shipping screen
 	 * 
 	 * @since 1.0.0
 	 * @return boolean
@@ -22,7 +22,7 @@ class Utils {
 	}
 
 	/**
-	 * Is plugin screen
+	 * Is plugin supported screen
 	 * 
 	 * @since 1.0.0
 	 * @return boolean
@@ -303,16 +303,6 @@ class Utils {
 	}
 
 	/**
-	 * Get rule extra values for UI management
-	 * 
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public static function get_rule_ui_values() {
-		return apply_filters('hide_shipping_rates/rule_ui_values', array());
-	}
-
-	/**
 	 * Get rule values
 	 * 
 	 * @since 1.0.0
@@ -326,6 +316,16 @@ class Utils {
 			'type' => 'cart:subtotal',
 			'operator' => 'less_than',
 		));
+	}
+
+	/**
+	 * Get rule extra values for UI management
+	 * 
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function get_rule_ui_values() {
+		return apply_filters('hide_shipping_rates/rule_ui_values', array());
 	}
 
 	/**

@@ -38,9 +38,7 @@ final class Date {
 	public function rule_values($values) {
 		return array_merge($values, array(
 			'weekly_days' => [],
-			'before_datetime' => '',
 			'after_datetime' => '',
-			'before_time' => '',
 			'after_time' => '',
 		));
 	}
@@ -169,9 +167,10 @@ final class Date {
 	 * @return void
 	 */
 	public function before_time() { ?>
-		<template v-if="type == 'date:before_time'">
-			<input type="time" v-model="before_time">
-		</template>
+		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:before_time'">
+			<input type="time">
+			<?php Utils::field_lock_message(); ?>
+		</div>
 	<?php
 	}
 
@@ -211,9 +210,10 @@ final class Date {
 	 * @return void
 	 */
 	public function before_datetime() { ?>
-		<template v-if="type == 'date:before_datetime'">
-			<input type="datetime-local" v-model="before_datetime">
-		</template>
+		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:before_datetime'">
+			<input type="datetime-local">
+			<?php Utils::field_lock_message(); ?>
+		</div>
 	<?php
 	}
 

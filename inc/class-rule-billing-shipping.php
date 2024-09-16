@@ -118,7 +118,7 @@ final class Billing_Shipping {
 			</select>
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
-			<input style="min-width: 400px;flex:1" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+			<input class="input-flex1" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
 		</template>
 	<?php
 	}
@@ -136,7 +136,7 @@ final class Billing_Shipping {
 			</select>
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
-			<input style="min-width: 400px;flex:1" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+			<input class="input-flex1" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
 		</template>
 	<?php
 	}
