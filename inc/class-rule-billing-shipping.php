@@ -199,7 +199,7 @@ final class Billing_Shipping {
 	}
 
 	/**
-	 * Add state template of billing
+	 * Add billing state template
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -220,7 +220,7 @@ final class Billing_Shipping {
 	}
 
 	/**
-	 * Add zipcode template of shipping
+	 * Add shipping zipcode template
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -239,7 +239,7 @@ final class Billing_Shipping {
 	}
 
 	/**
-	 * Add state template of shipping
+	 * Add shipping state template
 	 * 
 	 * @since 1.0.0
 	 * @return void

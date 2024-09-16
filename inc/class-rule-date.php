@@ -205,7 +205,7 @@ final class Date {
 	}
 
 	/**
-	 * Add before datetime rule
+	 * Add before datetime rule template
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -218,7 +218,7 @@ final class Date {
 	}
 
 	/**
-	 * Add after datetime rule
+	 * Add after datetime rule template
 	 * 
 	 * @since 1.0.0
 	 * @return void
@@ -229,6 +229,4 @@ final class Date {
 		</template>
 <?php
 	}
-
-	
 }
