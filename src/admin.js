@@ -155,10 +155,10 @@
 
 					const formData = new FormData();
 					self.shipping_classes.forEach((shipping_class) => {
-						formData.append('shipping_classes[]', shipping_class);
+						formData.append('term_ids[]', shipping_class);
 					})
 
-					formData.append('type', 'shipping_classes')
+					formData.append('type', 'taxonomy:product_shipping_class')
 					formData.append('security', hide_shipping_rates_admin.nonce_select2)
 					formData.append('action', 'hide_shipping_rates/get_select2_data')
 

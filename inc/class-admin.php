@@ -277,29 +277,32 @@ final class Admin {
 		$results = array();
 		$search_args = array();
 
-		$query_type = !empty($_POST['type']) ? sanitize_text_field($_POST['type']) : false;
 		$search_term = !empty($_POST['term']) ? sanitize_text_field($_POST['term'])  : '';
+		$query_type = !empty($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
+		$query_type = explode(':', $query_type);
 
-		if ('shipping_classes' == $query_type) {
-			$search_args = array('hide_empty' => false, 'taxonomy' => 'product_shipping_class');
+		$object_type = !empty($query_type[0]) ? $query_type[0] : '';
+		$object_slug = !empty($query_type[1]) ? $query_type[1] : '';
+
+		if ('taxonomy' == $object_type && !empty($object_slug)) {
+			$search_args = array('hide_empty' => false, 'taxonomy' => $object_slug);
 
 			if (!empty($search_term)) {
 				$search_args['search'] = $search_term;
 			}
 
-			if (isset($_POST['shipping_classes']) && is_array($_POST['shipping_classes'])) {
-				$shipping_classes = array_map('absint', $_POST['shipping_classes']);
-				$search_args['include'] = $shipping_classes;
+			if (isset($_POST['term_ids']) && is_array($_POST['term_ids'])) {
+				$search_args['include'] = array_map('absint', $_POST['term_ids']);
 			}
 
-			$shipping_classes_terms = get_terms($search_args);
+			$terms = get_terms($search_args);
 
-			$results = array_map(function ($shipping_class) {
-				return array('id' => $shipping_class->term_id, 'name' => $shipping_class->name);
-			}, $shipping_classes_terms);
+			$results = array_map(function ($term) {
+				return array('id' => $term->term_id, 'name' => $term->name);
+			}, $terms);
 		}
 
-		if ('users' == $query_type) {
+		if ('users' == $object_type) {
 			if (!empty($search_term)) {
 				$search_args['search'] = $search_term;
 			}
@@ -315,10 +318,10 @@ final class Admin {
 			}, $get_users);
 		}
 
-		if ('states' == $query_type) {
+		if ('states' == $object_type) {
 			if (empty($_POST['country'])) {
 				wp_send_json_error(array(
-					'error' => esc_html__('Country Missing', 'advanced-coupon-for-woocommerce')
+					'error' => esc_html__('Country Missing', 'hide-shipping-rates-for-woocommerce')
 				));
 			}
 

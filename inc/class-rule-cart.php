@@ -204,7 +204,7 @@ final class Cart {
 			</select>
 
 			<div class="loading-indicator" v-if="loading_shipping_classes"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="shipping_classes" data-type="shipping_classes">
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="shipping_classes" data-type="taxonomy:product_shipping_class">
 				<option v-for="shipping_class in get_ui_data_items('hold_shipping_classes')" :value="shipping_class.id" :selected="shipping_classes.includes(shipping_class.id.toString())">{{shipping_class.name}}</option>
 			</select>
 		</template>
