@@ -24,7 +24,8 @@ final class Cart {
 		add_filter('hide_shipping_rates/rule_matched', array($this, 'shipping_classes_filter'), 10, 2);
 
 		add_action('hide_shipping_rates/rule_templates', array($this, 'cart_common_templates'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_classes_template'));		
+		add_action('hide_shipping_rates/rule_templates', array($this, 'coupon_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'shipping_classes_template'));
 	}
 
 	/**
@@ -35,6 +36,7 @@ final class Cart {
 	 */
 	public function rule_values($values) {
 		return array_merge($values, array(
+			'coupons' => [],
 			'shipping_classes' => [],
 		));
 	}
@@ -47,6 +49,8 @@ final class Cart {
 	 */
 	public function rule_ui_values($values) {
 		return array_merge($values, array(
+			'hold_coupons' => [],
+			'loading_coupon' => true,
 			'hold_shipping_classes' => [],
 			'loading_shipping_classes' => true,
 		));
@@ -192,6 +196,26 @@ final class Cart {
 	}
 
 	/**
+	 * Coupon template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function coupon_template() { ?>
+		<template v-if="type == 'cart:coupons'">
+			<select v-model="operator">
+				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+			</select>
+
+			<div class="loading-indicator" v-if="loading_coupon"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Coupons', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="coupons" data-type="post_type:shop_coupon">
+				<option v-for="coupon in get_ui_data_items('hold_coupons')" :value="coupon.id" :selected="coupons.includes(coupon.id.toString())">{{coupon.name}}</option>
+			</select>
+		</template>
+	<?php
+	}
+
+	/**
 	 * Shipping classes template
 	 * 
 	 * @since 1.0.0
@@ -209,5 +233,5 @@ final class Cart {
 			</select>
 		</template>
 <?php
-	}	
+	}
 }

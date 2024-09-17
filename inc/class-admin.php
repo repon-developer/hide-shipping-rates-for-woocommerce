@@ -274,8 +274,7 @@ final class Admin {
 	public function get_select2_data() {
 		check_ajax_referer('_nonce_hide_shipping_rates/get_select2_data', 'security');
 
-		$results = array();
-		$search_args = array();
+		$results = $search_args = array();
 
 		$search_term = !empty($_POST['term']) ? sanitize_text_field($_POST['term'])  : '';
 		$query_type = !empty($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
@@ -308,8 +307,7 @@ final class Admin {
 			}
 
 			if (isset($_POST['user_ids']) && is_array($_POST['user_ids'])) {
-				$user_ids = array_map('absint', $_POST['user_ids']);
-				$search_args['include'] = $user_ids;
+				$search_args['include'] = array_map('absint', $_POST['user_ids']);
 			}
 
 			$get_users = get_users($search_args);
@@ -341,6 +339,22 @@ final class Admin {
 			$results = array_map(function ($state, $code) {
 				return array('id' => $code, 'name' => html_entity_decode($state));
 			}, $states, array_keys($states));
+		}
+
+		if ('post_type' == $object_type && !empty($object_slug)) {
+			$search_args['post_type'] = $object_slug;
+			if (!empty($search_term)) {
+				$search_args['s'] = $search_term;
+			}
+
+			if (isset($_POST['ids']) && is_array($_POST['ids'])) {
+				$search_args['post__in'] = array_map('absint', $_POST['ids']);
+			}
+
+			$posts = get_posts($search_args);
+			$results = array_map(function ($item) {
+				return array('id' => $item->ID, 'name' => $item->post_title);
+			}, $posts);
 		}
 
 		do_action('hide_shipping_rates/get_select2_data', $query_type, $search_term);

@@ -71,13 +71,8 @@
 					type: "POST",
 					delay: 500,
 					data: function (params) {
-						let country = self.billing_state_country;
-						if ($(this).data('model') == 'shipping_states') {
-							country = self.shipping_state_country;
-						}
-
 						return {
-							country,
+							country: $(this).attr('data-country'),
 							term: params.term,
 							type: $(this).data('type'),
 							security: hide_shipping_rates_admin.nonce_select2,
@@ -86,12 +81,10 @@
 					},
 					processResults: function (result) {
 						return {
-							results: $.map(result.data, function (data) {
-								return {
-									text: data.name,
-									id: data.id
-								}
-							})
+							results: $.map(result.data, (data) => ({
+								text: data.name,
+								id: data.id
+							}))
 						};
 					}
 				}
@@ -203,6 +196,38 @@
 						}
 					}).finally(() => {
 						self.loading_customers = false;
+					})
+				})();
+
+				(function () {
+					if (self.type !== 'cart:coupons') {
+						return
+					}
+
+					if (self.coupons.length == 0 || !Array.isArray(self.coupons)) {
+						return self.loading_coupon = false;
+					}
+
+					self.loading_coupon = true;
+
+					const formData = new FormData();
+					self.coupons.forEach((coupon_id) => {
+						formData.append('ids[]', coupon_id);
+					})
+
+					formData.append('type', 'post_type:shop_coupon')
+					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('action', 'hide_shipping_rates/get_select2_data')
+
+					fetch(hide_shipping_rates_admin.ajax_url, {
+						method: 'POST',
+						body: formData
+					}).then((response) => response.json()).then((result) => {
+						if (result.success == true) {
+							self.hold_coupons = result.data;
+						}
+					}).finally(() => {
+						self.loading_coupon = false;
 					})
 				})();
 

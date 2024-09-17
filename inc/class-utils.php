@@ -166,9 +166,14 @@ class Utils {
 				'priority' => 20,
 				'label' => __('Total weight', 'hide-shipping-rates-for-woocommerce'),
 			),
+			'cart:coupons' => array(
+				'group' => 'cart',
+				'priority' => 25,
+				'label' => __('Coupons', 'hide-shipping-rates-for-woocommerce'),
+			),
 			'cart:product_shipping_classes' => array(
 				'group' => 'cart',
-				'priority' => 20,
+				'priority' => 30,
 				'label' => __('Item Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
 			),
 
