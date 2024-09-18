@@ -70,6 +70,7 @@ final class Main {
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-cart.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-date.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-customer.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-cart-products.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-order-history.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-billing-shipping.php';
 	}
@@ -85,6 +86,7 @@ final class Main {
 		$this->rules['date'] = new Rule\Date();
 		$this->rules['customer'] = new Rule\Customer();
 		$this->rules['order_history'] = new Rule\Order_History();
+		$this->rules['cart_products'] = new Rule\Cart_Products();
 		$this->rules['billing_shipping'] = new Rule\Billing_Shipping();
 	}
 

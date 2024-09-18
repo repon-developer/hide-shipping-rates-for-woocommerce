@@ -89,6 +89,8 @@ class Utils {
 			'greater_than' => __('Greater than ( > )', 'hide-shipping-rates-for-woocommerce'),
 			'in_list' => __('In list', 'hide-shipping-rates-for-woocommerce'),
 			'not_in_list' => __('Not in list', 'hide-shipping-rates-for-woocommerce'),
+			'all_in_list' => __('All in list', 'hide-shipping-rates-for-woocommerce'),
+			'any_in_list' => __('Any in list', 'hide-shipping-rates-for-woocommerce'),
 		);
 
 		$return_operators = [];
@@ -132,6 +134,7 @@ class Utils {
 	public static function get_rule_groups() {
 		return apply_filters('hide_shipping_rates/rule_type_groups', array(
 			'cart' => __('Cart', 'hide-shipping-rates-for-woocommerce'),
+			'cart_products' => __('Cart Products', 'hide-shipping-rates-for-woocommerce'),
 			'date' => __('Date', 'hide-shipping-rates-for-woocommerce'),
 			'billing' => __('Billing', 'hide-shipping-rates-for-woocommerce'),
 			'shipping' => __('Shipping', 'hide-shipping-rates-for-woocommerce'),
@@ -171,10 +174,27 @@ class Utils {
 				'priority' => 25,
 				'label' => __('Coupons', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'cart:product_shipping_classes' => array(
-				'group' => 'cart',
-				'priority' => 30,
-				'label' => __('Item Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
+
+			/** Cart products related field types */
+			'cart_products:products' => array(
+				'group' => 'cart_products',
+				'priority' => 5,
+				'label' => __('Products', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'cart_products:categories' => array(
+				'group' => 'cart_products',
+				'priority' => 10,
+				'label' => __('Categories', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'cart_products:tags' => array(
+				'group' => 'cart_products',
+				'priority' => 15,
+				'label' => __('Tags', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'cart_products:shipping_classes' => array(
+				'group' => 'cart_products',
+				'priority' => 20,
+				'label' => __('Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
 			),
 
 			/** Date related field types */

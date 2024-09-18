@@ -50,8 +50,8 @@
 		},
 
 		mounted() {
-			this.pre_load_layout_data();
 			wp.hooks.doAction('hide_shipping_rates_rule_mounted', this);
+			this.pre_load_layout_data();
 		},
 
 		beforeUpdate() {
@@ -136,12 +136,92 @@
 				const self = this;
 
 				(function () {
-					if (self.type !== 'cart:product_shipping_classes') {
+					if (self.type !== 'cart_products:products' || self.cart_products.length == 0) {
 						return
 					}
 
-					if (self.shipping_classes.length == 0 || !Array.isArray(self.shipping_classes)) {
-						return self.loading_shipping_classes = false;
+					self.loading_products = true;
+
+					const formData = new FormData();
+					self.cart_products.forEach((product) => {
+						formData.append('ids[]', product);
+					})
+
+					formData.append('type', 'post_type:product')
+					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('action', 'hide_shipping_rates/get_select2_data')
+
+					fetch(hide_shipping_rates_admin.ajax_url, {
+						method: 'POST',
+						body: formData
+					}).then((response) => response.json()).then((result) => {
+						if (result.success == true) {
+							self.hold_products = result.data;
+						}
+					}).finally(() => {
+						self.loading_products = false;
+					})
+				})();
+
+				(function () {
+					if (self.type !== 'cart_products:categories' || self.categories.length == 0) {
+						return
+					}
+
+					self.loading_categories = true;
+
+					const formData = new FormData();
+					self.categories.forEach((category_id) => {
+						formData.append('term_ids[]', category_id);
+					})
+
+					formData.append('type', 'taxonomy:product_cat')
+					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('action', 'hide_shipping_rates/get_select2_data')
+
+					fetch(hide_shipping_rates_admin.ajax_url, {
+						method: 'POST',
+						body: formData
+					}).then((response) => response.json()).then((result) => {
+						if (result.success == true) {
+							self.hold_categories = result.data;
+						}
+					}).finally(() => {
+						self.loading_categories = false;
+					})
+				})();
+
+				(function () {
+					if (self.type !== 'cart_products:tags' || self.tags.length == 0) {
+						return
+					}
+
+					self.loading_tags = true;
+
+					const formData = new FormData();
+					self.tags.forEach((tag_id) => {
+						formData.append('term_ids[]', tag_id);
+					})
+
+					formData.append('type', 'taxonomy:product_tag')
+					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('action', 'hide_shipping_rates/get_select2_data')
+
+					fetch(hide_shipping_rates_admin.ajax_url, {
+						method: 'POST',
+						body: formData
+					}).then((response) => response.json()).then((result) => {
+						if (result.success == true) {
+							self.hold_tags = result.data;
+						}
+					}).finally(() => {
+						self.loading_tags = false;
+					})
+				})();
+
+				(function () {
+					if (self.type !== 'cart_products:shipping_classes' || self.shipping_classes.length == 0) {
+						return
 					}
 
 					self.loading_shipping_classes = true;
@@ -168,12 +248,8 @@
 				})();
 
 				(function () {
-					if (self.type !== 'customer:users') {
-						return
-					}
-
-					if (self.customer_users.length == 0 || !Array.isArray(self.customer_users)) {
-						return self.loading_customers = false;
+					if (self.type !== 'customer:users' || self.customer_users.length == 0) {
+						return;
 					}
 
 					self.loading_customers = true;
@@ -200,12 +276,8 @@
 				})();
 
 				(function () {
-					if (self.type !== 'cart:coupons') {
+					if (self.type !== 'cart:coupons' || self.coupons.length == 0) {
 						return
-					}
-
-					if (self.coupons.length == 0 || !Array.isArray(self.coupons)) {
-						return self.loading_coupon = false;
 					}
 
 					self.loading_coupon = true;
