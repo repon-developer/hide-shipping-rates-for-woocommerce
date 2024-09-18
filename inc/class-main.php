@@ -98,7 +98,7 @@ final class Main {
 	 */
 	public function hooks() {
 		add_filter('plugin_action_links', array($this, 'add_plugin_links'), 10, 2);
-		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000);		
+		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000, 2);		
 	}
 
 	/**
@@ -125,7 +125,7 @@ final class Main {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function manage_shipping_rates($rates) {
+	public function manage_shipping_rates($rates, $package) {
 		foreach ($rates as $rate_key => $rate) {
 			$method   = \WC_Shipping_Zones::get_shipping_method($rate->get_instance_id());
 			$rule_settings = json_decode(stripslashes($method->get_option('hide_shipping_rates_rules_settings')), true);
@@ -138,11 +138,11 @@ final class Main {
 				continue;
 			}
 
-			$matched_rules = array_filter($rules, function ($rule) {
-				return apply_filters('hide_shipping_rates/rule_matched', false, wp_parse_args($rule, Utils::get_rule_values()));
+			$matched_rules = array_filter($rules, function ($rule) use($package) {
+				return apply_filters('hide_shipping_rates/rule_matched', false, wp_parse_args($rule, Utils::get_rule_values()), $package);
 			});
 
-			//error_log(print_r($matched_rules, true));
+			//error_log(print_r($package, true));
 
 			$match_type = 'all';
 			if (isset($rule_settings['match_type'])) {

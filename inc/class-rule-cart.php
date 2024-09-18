@@ -19,10 +19,10 @@ final class Cart {
 	public function __construct() {
 		add_filter('hide_shipping_rates/rule_values', array($this, 'rule_values'));
 		add_filter('hide_shipping_rates/rule_ui_values', array($this, 'rule_ui_values'));
-		add_filter('hide_shipping_rates/rule_matched', array($this, 'cart_filters'), 10, 2);
+		add_filter('hide_shipping_rates/rule_matched', array($this, 'rule_filters'), 10, 2);
 
-		add_action('hide_shipping_rates/rule_templates', array($this, 'cart_common_templates'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'coupon_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'common_templates'));
 	}
 
 	/**
@@ -56,11 +56,7 @@ final class Cart {
 	 * @since 1.0.0
 	 * @return boolean
 	 */
-	public function cart_filters($matched, $rule) {
-		if (!in_array($rule['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight', 'cart:product_shipping_classes'))) {
-			return $matched;
-		}
-
+	public function rule_filters($matched, $rule) {
 		if (is_null(WC()->cart)) {
 			return $matched;
 		}
@@ -149,7 +145,7 @@ final class Cart {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function cart_common_templates() { ?>
+	public function common_templates() { ?>
 		<template v-if="['cart:subtotal', 'cart:total_quantity', 'cart:total_weight'].includes(type)">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than')); ?>

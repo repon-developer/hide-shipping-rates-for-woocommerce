@@ -69,7 +69,7 @@ final class Cart_Products {
 	 * @return boolean
 	 */
 	public function rule_filters($matched, $rule) {
-		if ('cart:product_shipping_classes' === $rule['type']) {
+		if ('cart_products:shipping_classes' === $rule['type']) {
 			$shipping_classes = isset($rule['shipping_classes']) && is_array($rule['shipping_classes']) ? $rule['shipping_classes'] : array();
 
 			$cart_products = WC()->cart->get_cart();
@@ -78,8 +78,14 @@ final class Cart_Products {
 				$product_shipping_classes[] = $item['data']->get_shipping_class_id();
 			}
 
-			$matched_items = array_intersect($shipping_classes, array_unique($product_shipping_classes));
-			if ('in_list' == $rule['operator'] && count($matched_items) > 0) {
+			$product_shipping_classes = array_unique(array_filter($product_shipping_classes));
+			
+			$matched_items = array_intersect($shipping_classes, $product_shipping_classes);
+			if ('any_in_list' == $rule['operator'] && count($matched_items) > 0) {
+				return true;
+			}
+
+			if ('all_in_list' == $rule['operator'] && count($shipping_classes) === count($matched_items)) {
 				return true;
 			}
 
