@@ -112,6 +112,14 @@
 	cursor: move;
 }
 
+.hide-shipping-rates-rule-item .rule-type-note {
+	color: #757575;
+	flex: 0 0 100%;
+	margin-top: 2px;
+	font-size: 13px;
+	font-style: italic;
+}
+
 .hide-shipping-rates-pro-field {
 	position: relative;
 }

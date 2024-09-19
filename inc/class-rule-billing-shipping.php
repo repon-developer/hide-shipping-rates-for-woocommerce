@@ -119,6 +119,7 @@ final class Billing_Shipping {
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
 			<input class="input-flex1" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+			<div class="rule-type-note"><?php esc_html_e('Separated by commas for multiple cities. Example: Chicago, New York.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
@@ -137,6 +138,7 @@ final class Billing_Shipping {
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
 			<input class="input-flex1" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
+			<div class="rule-type-note"><?php esc_html_e('Separated by commas for multiple cities. Example: Chicago, New York.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
@@ -191,8 +193,7 @@ final class Billing_Shipping {
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
-			<input class="input-flex1" type="text" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
-
+			<input class="input-flex1" type="text">
 			<?php Utils::field_lock_message(); ?>
 		</div>
 	<?php
@@ -210,7 +211,7 @@ final class Billing_Shipping {
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
-			<select ref="select2_dropdown">
+			<select>
 				<option value=""><?php esc_html_e('Select a country', 'hide-shipping-rates-for-woocommerce'); ?></option>
 				<option v-for="(country, country_code) in get_countries()" :value="country_code">{{country}}</option>
 			</select>
@@ -231,8 +232,7 @@ final class Billing_Shipping {
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
-			<input class="input-flex1" type="text" v-model="zipcodes" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
-
+			<input class="input-flex1" type="text">
 			<?php Utils::field_lock_message(); ?>
 		</div>
 	<?php
@@ -250,7 +250,7 @@ final class Billing_Shipping {
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
-			<select ref="select2_dropdown">
+			<select>
 				<option value=""><?php esc_html_e('Select a country', 'hide-shipping-rates-for-woocommerce'); ?></option>
 				<option v-for="(country, country_code) in get_countries()" :value="country_code">{{country}}</option>
 			</select>

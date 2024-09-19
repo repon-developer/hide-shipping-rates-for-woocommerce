@@ -172,6 +172,9 @@ final class Cart {
 			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Coupons', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="coupons" data-type="post_type:shop_coupon">
 				<option v-for="coupon in get_ui_data_items('hold_coupons')" :value="coupon.id" :selected="coupons.includes(coupon.id.toString())">{{coupon.name}}</option>
 			</select>
+
+			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart contains any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart does not contain any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
