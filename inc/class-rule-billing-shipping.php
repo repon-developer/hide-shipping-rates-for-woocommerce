@@ -119,7 +119,7 @@ final class Billing_Shipping {
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
 			<input class="input-flex1" type="text" v-model="billing_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
-			<div class="rule-type-note"><?php esc_html_e('For multiple cities use commas for separate. Example: Chicago, New York.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="guideline"><?php esc_html_e('For multiple cities use commas for separate. Example: Chicago, New York.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
@@ -138,7 +138,7 @@ final class Billing_Shipping {
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
 			<input class="input-flex1" type="text" v-model="shipping_cities" placeholder="<?php echo esc_attr($placeholder); ?>" title="<?php echo esc_attr($placeholder); ?>">
-			<div class="rule-type-note"><?php esc_html_e('For multiple cities use commas for separate. Example: Chicago, New York.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="guideline"><?php esc_html_e('For multiple cities use commas for separate. Example: Chicago, New York.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}

@@ -173,8 +173,8 @@ final class Cart {
 				<option v-for="coupon in get_ui_data_items('hold_coupons')" :value="coupon.id" :selected="coupons.includes(coupon.id.toString())">{{coupon.name}}</option>
 			</select>
 
-			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart contains any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart does not contain any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="guideline" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart contains any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="guideline" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart does not contain any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}

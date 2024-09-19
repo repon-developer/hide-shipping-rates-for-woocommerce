@@ -95,6 +95,26 @@ final class Admin {
 						<span class="dashicons dashicons-lock" v-if="rules.length >= max_free_rule_item && !has_pro()"></span>
 						<?php esc_html_e('Add another rule', 'hide-shipping-rates-for-woocommerce') ?>
 					</a>
+
+					<div style="margin-top: 20px"></div>
+
+					<div class="hide-shipping-rates-field-row">
+						<label>
+							<input type="checkbox" v-model="hide_on_frontend">
+							<?php esc_html_e('Hide this shipping rate on frontend.', 'hide-shipping-rates-for-woocommerce'); ?>
+						</label>
+
+						<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Only the store manager will be able to see this. Use for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
+					</div>
+
+					<div class="hide-shipping-rates-field-row">
+						<label>
+							<input type="checkbox" v-model="disable_rules">
+							<?php esc_html_e('Disable all rules for customers.', 'hide-shipping-rates-for-woocommerce'); ?>
+						</label>
+
+						<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Rule functionality will be applied only for store managers. Use this for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
+					</div>
 				</div>
 			</td>
 		</tr>
