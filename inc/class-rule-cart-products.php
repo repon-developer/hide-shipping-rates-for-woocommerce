@@ -114,9 +114,9 @@ final class Cart_Products {
 				<option v-for="product in get_ui_data_items('hold_products')" :value="product.id" :selected="cart_products.includes(product.id.toString())">{{product.name}}</option>
 			</select>
 
-			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart contains any product in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart contains all products in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart does not contain any product in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if any of the above products are available in the cart.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the above product(s) is available in the cart.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart does not contain any product in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
@@ -138,9 +138,9 @@ final class Cart_Products {
 				<option v-for="tag in get_ui_data_items('hold_tags')" :value="tag.id" :selected="tags.includes(tag.id.toString())">{{tag.name}}</option>
 			</select>
 
-			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any product tag in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain all product tags in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products do not contain any product tag in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any tag in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the above tags are available in the cart products.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products do not contain any tag in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
@@ -162,9 +162,9 @@ final class Cart_Products {
 				<option v-for="category in get_ui_data_items('hold_categories')" :value="category.id" :selected="categories.includes(category.id.toString())">{{category.name}}</option>
 			</select>
 
-			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any category in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain all categories in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products do not contain any category in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any category in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the above categories are available in the cart products.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products do not contain any category in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
 	}
@@ -186,9 +186,9 @@ final class Cart_Products {
 				<option v-for="shipping_class in get_ui_data_items('hold_shipping_classes')" :value="shipping_class.id" :selected="shipping_classes.includes(shipping_class.id.toString())">{{shipping_class.name}}</option>
 			</select>
 
-			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any shipping class in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain all shipping classes in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
-			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products do not contain any shipping class in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the any of above shipping classes are available in the cart products.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'all_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain all of the above shipping classes.', 'hide-shipping-rates-for-woocommerce') ?></div>
+			<div class="rule-type-note" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products do not contain any shipping class in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 <?php
 	}
