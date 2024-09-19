@@ -60,7 +60,7 @@ final class Billing_Shipping {
 			$cities = array_filter(array_map('trim', explode(',', strtolower($cities))));
 
 			$customer_city = strtolower(WC()->customer->get_billing_city());
-			if ('in_list' === $operator && in_array($customer_city, $cities)) {
+			if ('any_in_list' === $operator && in_array($customer_city, $cities)) {
 				return true;
 			}
 
@@ -75,7 +75,7 @@ final class Billing_Shipping {
 
 			$customer_city = strtolower(WC()->customer->get_shipping_city());
 
-			if ('in_list' === $operator && in_array($customer_city, $cities)) {
+			if ('any_in_list' === $operator && in_array($customer_city, $cities)) {
 				return true;
 			}
 
@@ -93,7 +93,7 @@ final class Billing_Shipping {
 				$customer_country = WC()->customer->get_billing_country();
 			}
 
-			if ('in_list' === $operator && in_array($customer_country, $countries)) {
+			if ('any_in_list' === $operator && in_array($customer_country, $countries)) {
 				return true;
 			}
 
@@ -114,7 +114,7 @@ final class Billing_Shipping {
 	public function billing_city_template() { ?>
 		<template v-if="type == 'billing:city'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
@@ -132,7 +132,7 @@ final class Billing_Shipping {
 	public function shipping_city_template() { ?>
 		<template v-if="type == 'shipping:city'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<?php $placeholder = __('Example: Chicago, New York', 'hide-shipping-rates-for-woocommerce'); ?>
@@ -150,7 +150,7 @@ final class Billing_Shipping {
 	public function billing_country_template() { ?>
 		<template v-if="type == 'billing:country'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<select class="select2-flex1" v-model="billing_countries" ref="select2_dropdown" multiple data-model="billing_countries" data-placeholder="<?php esc_attr_e('Select country', 'hide-shipping-rates-for-woocommerce'); ?>">
@@ -169,7 +169,7 @@ final class Billing_Shipping {
 	public function shipping_country_template() { ?>
 		<template v-if="type == 'shipping:country'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<select class="select2-flex1" v-model="shipping_countries" ref="select2_dropdown" multiple data-model="shipping_countries" data-placeholder="<?php esc_attr_e('Select country', 'hide-shipping-rates-for-woocommerce'); ?>">
@@ -188,7 +188,7 @@ final class Billing_Shipping {
 	public function billing_zipcode_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'billing:zipcode'">
 			<select>
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<input class="input-flex1" type="text" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
@@ -207,7 +207,7 @@ final class Billing_Shipping {
 	public function billing_state_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'billing:state'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<select ref="select2_dropdown">
@@ -228,7 +228,7 @@ final class Billing_Shipping {
 	public function shipping_zipcode_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'shipping:zipcode'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<input class="input-flex1" type="text" v-model="zipcodes" placeholder="<?php esc_html_e('Example: 38632, 21710, 38686', 'hide-shipping-rates-for-woocommerce'); ?>">
@@ -247,7 +247,7 @@ final class Billing_Shipping {
 	public function shipping_state_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'shipping:state'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<select ref="select2_dropdown">

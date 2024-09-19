@@ -165,7 +165,7 @@ final class Cart {
 	public function coupon_template() { ?>
 		<template v-if="type == 'cart:coupons'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<div class="loading-indicator" v-if="loading_coupon"></div>

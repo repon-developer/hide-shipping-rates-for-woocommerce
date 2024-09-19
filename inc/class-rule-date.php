@@ -55,7 +55,7 @@ final class Date {
 			$weekly_days = isset($rule['weekly_days']) && is_array($rule['weekly_days']) ? $rule['weekly_days'] : array();
 			$current_day = strtolower(current_time('l'));
 
-			if ('in_list' == $rule['operator'] && in_array($current_day, $weekly_days)) {
+			if ('any_in_list' == $rule['operator'] && in_array($current_day, $weekly_days)) {
 				return true;
 			}
 
@@ -128,7 +128,7 @@ final class Date {
 	public function weekly_days() { ?>
 		<template v-if="type == 'date:weekly_days'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<select class="select2-flex1" v-model="weekly_days" data-model="weekly_days" ref="select2_dropdown" data-placeholder="<?php esc_attr_e('Select days', 'hide-shipping-rates-for-woocommerce'); ?>" multiple>

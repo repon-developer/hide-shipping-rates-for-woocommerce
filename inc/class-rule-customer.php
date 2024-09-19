@@ -48,7 +48,7 @@ final class Customer {
 	public function rule_ui_values($values) {
 		return array_merge($values, array(
 			'hold_customers' => [],
-			'loading_customers' => true,
+			'loading_customers' => false,
 		));
 	}
 
@@ -63,7 +63,7 @@ final class Customer {
 
 		if ('customer:users' === $rule['type']) {
 			$customers = isset($rule['customer_users']) && is_array($rule['customer_users']) ? $rule['customer_users'] : array();
-			if ('in_list' === $operator && in_array(get_current_user_id(), $customers)) {
+			if ('any_in_list' === $operator && in_array(get_current_user_id(), $customers)) {
 				return true;
 			}
 
@@ -92,7 +92,7 @@ final class Customer {
 	public function users_template() { ?>
 		<template v-if="type == 'customer:users'">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<div class="loading-indicator" v-if="loading_customers"></div>
@@ -112,7 +112,7 @@ final class Customer {
 	public function customer_roles_template() { ?>
 		<div class="hide-shipping-rates-pro-field" v-if="type == 'customer:roles'">
 			<select>
-				<?php Utils::get_operators_options(array('in_list', 'not_in_list')); ?>
+				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
 			<select>
