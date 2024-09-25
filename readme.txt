@@ -4,8 +4,8 @@ Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping
 Requires at least: 5.0
 Tested up to: 6.6.1
 Stable tag: 1.0.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Easily hide WooCommerce shipping rates based on cart total, weight, quantity, product class, address, and user roles to enhance checkout flexibility.
 

@@ -98,7 +98,7 @@ final class Main {
 	 */
 	public function hooks() {
 		add_filter('plugin_action_links', array($this, 'add_plugin_links'), 10, 2);
-		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000, 2);		
+		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000, 2);
 	}
 
 	/**
@@ -133,12 +133,22 @@ final class Main {
 				continue;
 			}
 
+			if (!current_user_can('manage_woocommerce')) {
+				if (isset($rule_settings['hide_shipping_rate']) && true === $rule_settings['hide_shipping_rate']) {
+					unset($rates[$rate_key]);
+				}
+
+				if (isset($rule_settings['disable_shipping_rules']) && true === $rule_settings['disable_shipping_rules']) {
+					continue;
+				}
+			}
+
 			$rules = isset($rule_settings['rules']) && is_array($rule_settings['rules']) ? $rule_settings['rules'] : array();
 			if (empty($rules)) {
 				continue;
 			}
 
-			$matched_rules = array_filter($rules, function ($rule) use($package) {
+			$matched_rules = array_filter($rules, function ($rule) use ($package) {
 				return apply_filters('hide_shipping_rates/rule_matched', false, wp_parse_args($rule, Utils::get_rule_values()), $package);
 			});
 
@@ -159,7 +169,7 @@ final class Main {
 		}
 
 		return $rates;
-	}	
+	}
 }
 
 Main::get_instance();

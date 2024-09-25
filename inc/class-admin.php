@@ -100,16 +100,16 @@ final class Admin {
 
 					<div class="hide-shipping-rates-field-row">
 						<label>
-							<input type="checkbox" v-model="hide_on_frontend">
+							<input type="checkbox" v-model="hide_shipping_rate">
 							<?php esc_html_e('Hide this shipping rate on frontend.', 'hide-shipping-rates-for-woocommerce'); ?>
 						</label>
 
 						<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Only the store manager will be able to see this. Use for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
 					</div>
 
-					<div class="hide-shipping-rates-field-row">
+					<div class="hide-shipping-rates-field-row" v-if="hide_shipping_rate !== true">
 						<label>
-							<input type="checkbox" v-model="disable_rules">
+							<input type="checkbox" v-model="disable_shipping_rules">
 							<?php esc_html_e('Disable all rules for customers.', 'hide-shipping-rates-for-woocommerce'); ?>
 						</label>
 

@@ -319,6 +319,8 @@
 			return {
 				rules: [],
 				match_type: 'all',
+				hide_shipping_rate: false,
+				disable_shipping_rules: false,
 			}
 		},
 
