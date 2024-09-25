@@ -248,14 +248,14 @@
 				})();
 
 				(function () {
-					if (self.type !== 'customer:users' || self.customer_users.length == 0) {
+					if (self.type !== 'user:users' || self.users.length == 0) {
 						return;
 					}
 
-					self.loading_customers = true;
+					self.loading_users = true;
 
 					const formData = new FormData();
-					self.customer_users.forEach((user_id) => {
+					self.users.forEach((user_id) => {
 						formData.append('user_ids[]', user_id);
 					})
 
@@ -268,10 +268,10 @@
 						body: formData
 					}).then((response) => response.json()).then((result) => {
 						if (result.success == true) {
-							self.hold_customers = result.data;
+							self.hold_users = result.data;
 						}
 					}).finally(() => {
-						self.loading_customers = false;
+						self.loading_users = false;
 					})
 				})();
 

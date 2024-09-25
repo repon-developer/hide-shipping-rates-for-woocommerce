@@ -137,7 +137,7 @@ class Utils {
 			'date' => __('Date', 'hide-shipping-rates-for-woocommerce'),
 			'billing' => __('Billing', 'hide-shipping-rates-for-woocommerce'),
 			'shipping' => __('Shipping', 'hide-shipping-rates-for-woocommerce'),
-			'customer' => __('Customer', 'hide-shipping-rates-for-woocommerce'),
+			'user' => __('Customer', 'hide-shipping-rates-for-woocommerce'),
 			'order_history' => __('Order History', 'hide-shipping-rates-for-woocommerce'),
 			'others' => __('Others', 'hide-shipping-rates-for-woocommerce'),
 		));
@@ -278,18 +278,18 @@ class Utils {
 			),
 
 			/** Customer related field types */
-			'customer:users' => array(
-				'group' => 'customer',
+			'user:users' => array(
+				'group' => 'user',
 				'priority' => 10,
 				'label' => __('Users', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'customer:roles' => array(
-				'group' => 'customer',
+			'user:roles' => array(
+				'group' => 'user',
 				'priority' => 15,
 				'label' => __('Roles', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'customer:logged_in' => array(
-				'group' => 'customer',
+			'user:logged_in' => array(
+				'group' => 'user',
 				'priority' => 20,
 				'label' => __('Logged In', 'hide-shipping-rates-for-woocommerce'),
 			),

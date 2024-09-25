@@ -136,6 +136,28 @@ final class Cart {
 			}
 		}
 
+		if ('cart:coupons' === $rule['type']) {
+			if (isset($condition['coupons']) || is_array($rule['coupons'])) {
+				$applied_coupons = WC()->cart->applied_coupons;
+				if (empty($applied_coupons)) {
+					return $matched;
+				}
+
+				$coupons = array_map(function ($coupon_id) {
+					return get_post_field('post_name', $coupon_id);
+				}, $rule['coupons']);
+
+				$matched_coupons = array_intersect($coupons, $applied_coupons);
+				if ('any_in_list' === $operator && count($matched_coupons) > 0) {
+					return true;
+				}
+
+				if ('not_in_list' === $operator && count($matched_coupons) == 0) {
+					return true;
+				}
+			}
+		}
+
 		return $matched;
 	}
 
