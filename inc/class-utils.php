@@ -87,6 +87,7 @@ class Utils {
 			'less_than_or_equal' => __('Less than or equal ( <= )', 'hide-shipping-rates-for-woocommerce'),
 			'greater_than_or_equal' => __('Greater than or equal ( >= )', 'hide-shipping-rates-for-woocommerce'),
 			'greater_than' => __('Greater than ( > )', 'hide-shipping-rates-for-woocommerce'),
+			'between_values' => __('Between values', 'hide-shipping-rates-for-woocommerce'),
 			'any_in_list' => __('Any in list', 'hide-shipping-rates-for-woocommerce'),
 			'all_in_list' => __('All in list', 'hide-shipping-rates-for-woocommerce'),
 			'not_in_list' => __('Not in list', 'hide-shipping-rates-for-woocommerce'),

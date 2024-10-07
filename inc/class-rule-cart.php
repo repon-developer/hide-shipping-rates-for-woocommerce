@@ -23,6 +23,7 @@ final class Cart {
 
 		add_action('hide_shipping_rates/rule_templates', array($this, 'coupon_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'common_templates'));
+		add_action('hide_shipping_rates/cart_common_fields', array($this, 'cart_common_fields'));
 	}
 
 	/**
@@ -34,6 +35,8 @@ final class Cart {
 	public function rule_values($values) {
 		return array_merge($values, array(
 			'coupons' => [],
+			'value_two' => '',
+			'cart_value_type' => 'in_cart',
 		));
 	}
 
@@ -170,10 +173,12 @@ final class Cart {
 	public function common_templates() { ?>
 		<template v-if="['cart:subtotal', 'cart:total_quantity', 'cart:total_weight'].includes(type)">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than')); ?>
+				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than', 'between_values')); ?>
 			</select>
 
-			<input type="text" v-model="value" placeholder="<?php echo '0.00'; ?>">
+			<input type="number" step="0.01" v-model="value" placeholder="<?php echo '0.00'; ?>" style="width: 80px!important;text-align:center">
+			<input type="number" step="0.01" v-model="value_two" placeholder="<?php echo '0.00'; ?>" v-if="'between_values' == operator" style="width: 80px!important;text-align:center">
+			<?php do_action('hide_shipping_rates/cart_common_fields') ?>
 		</template>
 	<?php
 	}
@@ -199,5 +204,21 @@ final class Cart {
 			<div class="guideline" v-if="'not_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart does not contain any coupon in the selected list.', 'hide-shipping-rates-for-woocommerce') ?></div>
 		</template>
 	<?php
+	}
+
+	/**
+	 * Cart common fields
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function cart_common_fields() { ?>
+		<select v-model="cart_value_type">
+			<option value="in_cart"><?php esc_html_e('In Cart', 'advanced-coupon-for-woocommerce'); ?></option>
+			<option disabled><?php esc_html_e('In Tags (Pro)', 'advanced-coupon-for-woocommerce'); ?></option>
+			<option disabled><?php esc_html_e('In Categories (Pro)', 'advanced-coupon-for-woocommerce'); ?></option>
+			<option disabled><?php esc_html_e('In Shipping Classes (Pro)', 'advanced-coupon-for-woocommerce'); ?></option>
+		</select>
+<?php
 	}
 }

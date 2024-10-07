@@ -86,6 +86,10 @@
 	line-height: 34px !important;
 }
 
+.hide-shipping-rates-rule-item [type="number"] {
+	padding-right: 0!important;
+}
+
 .hide-shipping-rates-rule-item select {
 	padding-inline-end: 24px !important;
 }
