@@ -157,7 +157,7 @@ final class Admin {
 			'countries' => $wc_countries->get_countries(),
 			'rule_values' => Utils::get_rule_values(),
 			'rule_ui_values' => Utils::get_rule_ui_values(),
-			'nonce_select2' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
+			'nonce_select2_data' => wp_create_nonce('_nonce_hide_shipping_rates/get_select2_data'),
 			'i10n' => array(
 				'delete_rule_warning' => __('Do you want to delete this rule?', 'hide-shipping-rates-for-woocommerce'),
 			)
@@ -377,7 +377,7 @@ final class Admin {
 			}, $posts);
 		}
 
-		do_action('hide_shipping_rates/get_select2_data', $query_type, $search_term);
+		$results = apply_filters('hide_shipping_rates/get_select2_data', $results, $query_type, $search_term);
 
 		wp_send_json_success($results);
 	}

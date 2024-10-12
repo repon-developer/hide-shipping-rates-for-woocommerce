@@ -20,6 +20,7 @@ final class Cart {
 		add_filter('hide_shipping_rates/rule_values', array($this, 'rule_values'));
 		add_filter('hide_shipping_rates/rule_ui_values', array($this, 'rule_ui_values'));
 		add_filter('hide_shipping_rates/rule_matched', array($this, 'rule_filters'), 10, 2);
+		add_filter('hide_shipping_rates/rule_matched', array($this, 'rule_filter_coupon'), 10, 2);
 
 		add_action('hide_shipping_rates/rule_templates', array($this, 'coupon_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'common_templates'));
@@ -49,7 +50,6 @@ final class Cart {
 	public function rule_ui_values($values) {
 		return array_merge($values, array(
 			'hold_coupons' => [],
-			'loading_coupon' => true,
 		));
 	}
 
@@ -60,105 +60,87 @@ final class Cart {
 	 * @return boolean
 	 */
 	public function rule_filters($matched, $rule) {
-		if (is_null(WC()->cart)) {
+		if (!in_array($rule['type'], array('cart:subtotal', 'cart:total_quantity', 'cart:total_weight', 'cart:coupons'))) {
 			return $matched;
 		}
 
 		$operator = $rule['operator'];
-		$target_amount = floatval($rule['value']);
+		$value_one = floatval($rule['value']);
+		$value_two = isset($rule['value_two']) ? floatval($rule['value_two']) : 0.00;
 
+
+		$compare_value = 0.00;
 		if ('cart:subtotal' === $rule['type']) {
-			$subtotal = (float) WC()->cart->get_subtotal();
-
-			if ('equal_to' === $operator && $subtotal == $target_amount) {
-				return true;
-			}
-
-			if ('less_than' === $operator && $subtotal < $target_amount) {
-				return true;
-			}
-
-			if ('less_than_or_equal' === $operator && $subtotal <= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than_or_equal' === $operator && $subtotal >= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than' === $operator && $subtotal > $target_amount) {
-				return true;
-			}
+			$compare_value = (float) WC()->cart->get_subtotal();
 		}
 
 		if ('cart:total_quantity' === $rule['type']) {
-			$quantity = WC()->cart->get_cart_contents_count();
-
-			if ('equal_to' === $operator && $quantity == $target_amount) {
-				return true;
-			}
-
-			if ('less_than' === $operator && $quantity < $target_amount) {
-				return true;
-			}
-
-			if ('less_than_or_equal' === $operator && $quantity <= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than_or_equal' === $operator && $quantity >= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than' === $operator && $quantity > $target_amount) {
-				return true;
-			}
+			$compare_value = WC()->cart->get_cart_contents_count();
 		}
 
 		if ('cart:total_weight' === $rule['type']) {
-			$weight = WC()->cart->cart_contents_weight;
-
-			if ('equal_to' === $operator && $weight == $target_amount) {
-				return true;
-			}
-
-			if ('less_than' === $operator && $weight < $target_amount) {
-				return true;
-			}
-
-			if ('less_than_or_equal' === $operator && $weight <= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than_or_equal' === $operator && $weight >= $target_amount) {
-				return true;
-			}
-
-			if ('greater_than' === $operator && $weight > $target_amount) {
-				return true;
-			}
+			$compare_value = WC()->cart->cart_contents_weight;
 		}
 
-		if ('cart:coupons' === $rule['type']) {
-			if (isset($condition['coupons']) || is_array($rule['coupons'])) {
-				$applied_coupons = WC()->cart->applied_coupons;
-				if (empty($applied_coupons)) {
-					return $matched;
-				}
+		$compare_value = apply_filters('hide_shipping_rates/cart_compare_value', $compare_value, $rule);
 
-				$coupons = array_map(function ($coupon_id) {
-					return get_post_field('post_name', $coupon_id);
-				}, $rule['coupons']);
+		if ('equal_to' === $operator && $compare_value == $value_one) {
+			return true;
+		}
 
-				$matched_coupons = array_intersect($coupons, $applied_coupons);
-				if ('any_in_list' === $operator && count($matched_coupons) > 0) {
-					return true;
-				}
+		if ('less_than' === $operator && $compare_value < $value_one) {
+			return true;
+		}
 
-				if ('not_in_list' === $operator && count($matched_coupons) == 0) {
-					return true;
-				}
-			}
+		if ('less_than_or_equal' === $operator && $compare_value <= $value_one) {
+			return true;
+		}
+
+		if ('greater_than_or_equal' === $operator && $compare_value >= $value_one) {
+			return true;
+		}
+
+		if ('greater_than' === $operator && $compare_value > $value_one) {
+			return true;
+		}
+
+		if ('between_values' === $operator && $compare_value >= $value_one && $compare_value <= $value_two) {
+			return true;
+		}
+
+		return $matched;
+	}
+
+
+	/**
+	 * Coupon rule filter
+	 * 
+	 * @since 1.0.0
+	 * @return boolean
+	 */
+	public function rule_filter_coupon($matched, $rule) {
+		$operator = $rule['operator'];
+
+		if ('cart:coupons' !== $rule['type'] || !isset($rule['coupons']) || !is_array($rule['coupons'])) {
+			return $matched;
+		}
+
+		$applied_coupons = WC()->cart->applied_coupons;
+		if (empty($applied_coupons)) {
+			return $matched;
+		}
+
+		$coupons = array_map(function ($coupon_id) {
+			return get_post_field('post_name', $coupon_id);
+		}, $rule['coupons']);
+
+		$matched_coupons = array_intersect($coupons, $applied_coupons);
+		if ('any_in_list' === $operator && count($matched_coupons) > 0) {
+			return true;
+		}
+
+		if ('not_in_list' === $operator && count($matched_coupons) == 0) {
+			return true;
 		}
 
 		return $matched;
@@ -189,14 +171,20 @@ final class Cart {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function coupon_template() { ?>
+	public function coupon_template() {
+		$model_values = array(
+			'model' => 'coupons',
+			'hold_data' => 'hold_coupons',
+			'data_type' => 'post_type:shop_coupon',
+		); ?>
+
 		<template v-if="type == 'cart:coupons'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
-			<div class="loading-indicator" v-if="loading_coupon"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Coupons', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="coupons" data-type="post_type:shop_coupon">
+			<div class="loading-indicator" v-if="loading"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Coupons', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="coupon in get_ui_data_items('hold_coupons')" :value="coupon.id" :selected="coupons.includes(coupon.id.toString())">{{coupon.name}}</option>
 			</select>
 

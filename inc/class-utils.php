@@ -200,38 +200,38 @@ class Utils {
 			/** Date related field types */
 			'date:weekly_days' => array(
 				'group' => 'date',
-				'priority' => 10,
+				'priority' => 5,
 				'label' => __('Weekly Days', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'date:between_times' => array(
-				'group' => 'date',
-				'priority' => 15,
-				'label' => __('Between Times', 'hide-shipping-rates-for-woocommerce'),
 			),
 			'date:before_time' => array(
 				'group' => 'date',
-				'priority' => 20,
+				'priority' => 10,
 				'label' => __('Before Time', 'hide-shipping-rates-for-woocommerce'),
 			),
 			'date:after_time' => array(
 				'group' => 'date',
-				'priority' => 25,
+				'priority' => 15,
 				'label' => __('After Time', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'date:between_dates' => array(
+			'date:between_times' => array(
 				'group' => 'date',
-				'priority' => 30,
-				'label' => __('Between Dates', 'hide-shipping-rates-for-woocommerce'),
+				'priority' => 20,
+				'label' => __('Between Times', 'hide-shipping-rates-for-woocommerce'),
 			),
 			'date:before_datetime' => array(
 				'group' => 'date',
-				'priority' => 35,
-				'label' => __('Before Date & Time', 'hide-shipping-rates-for-woocommerce'),
+				'priority' => 30,
+				'label' => __('Before Date', 'hide-shipping-rates-for-woocommerce'),
 			),
 			'date:after_datetime' => array(
 				'group' => 'date',
+				'priority' => 35,
+				'label' => __('After Date', 'hide-shipping-rates-for-woocommerce'),
+			),
+			'date:between_dates' => array(
+				'group' => 'date',
 				'priority' => 40,
-				'label' => __('After Date & Time', 'hide-shipping-rates-for-woocommerce'),
+				'label' => __('Between Dates', 'hide-shipping-rates-for-woocommerce'),
 			),
 
 			/** Billing address related field types */
@@ -350,7 +350,7 @@ class Utils {
 	 * @return array
 	 */
 	public static function get_rule_ui_values() {
-		return apply_filters('hide_shipping_rates/rule_ui_values', array());
+		return apply_filters('hide_shipping_rates/rule_ui_values', array('loading' => false));
 	}
 
 	/**

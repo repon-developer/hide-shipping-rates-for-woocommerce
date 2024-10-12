@@ -54,11 +54,6 @@ final class Cart_Products {
 			'hold_products' => [],
 			'hold_categories' => [],
 			'hold_shipping_classes' => [],
-
-			'loading_tags' => false,
-			'loading_products' => false,
-			'loading_categories' => false,
-			'loading_shipping_classes' => false,
 		));
 	}
 
@@ -103,14 +98,19 @@ final class Cart_Products {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function products_template() { ?>
+	public function products_template() { 
+		$model_values = array(
+			'model' => 'cart_products',
+			'hold_data' => 'hold_products',
+			'data_type' => 'post_type:product',
+		); ?>
 		<template v-if="type == 'cart_products:products'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'all_in_list', 'not_in_list')); ?>
 			</select>
 
-			<div class="loading-indicator" v-if="loading_products"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Products', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="cart_products" data-type="post_type:product">
+			<div class="loading-indicator" v-if="loading"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Products', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="product in get_ui_data_items('hold_products')" :value="product.id" :selected="cart_products.includes(product.id.toString())">{{product.name}}</option>
 			</select>
 
@@ -127,14 +127,20 @@ final class Cart_Products {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function tags_template() { ?>
+	public function tags_template() {
+		$model_values = array(
+			'model' => 'tags',
+			'hold_data' => 'hold_tags',
+			'data_type' => 'taxonomy:product_tag',
+		); ?>
+
 		<template v-if="type == 'cart_products:tags'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'all_in_list', 'not_in_list')); ?>
 			</select>
 
-			<div class="loading-indicator" v-if="loading_tags"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Tags', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="tags" data-type="taxonomy:product_tag">
+			<div class="loading-indicator" v-if="loading"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Tags', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="tag in get_ui_data_items('hold_tags')" :value="tag.id" :selected="tags.includes(tag.id.toString())">{{tag.name}}</option>
 			</select>
 
@@ -151,14 +157,20 @@ final class Cart_Products {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function categories_template() { ?>
+	public function categories_template() {
+		$model_values = array(
+			'model' => 'categories',
+			'hold_data' => 'hold_categories',
+			'data_type' => 'taxonomy:product_cat',
+		); ?>
+
 		<template v-if="type == 'cart_products:categories'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'all_in_list', 'not_in_list')); ?>
 			</select>
 
-			<div class="loading-indicator" v-if="loading_categories"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Categories', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="categories" data-type="taxonomy:product_cat">
+			<div class="loading-indicator" v-if="loading"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Categories', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="category in get_ui_data_items('hold_categories')" :value="category.id" :selected="categories.includes(category.id.toString())">{{category.name}}</option>
 			</select>
 
@@ -175,14 +187,20 @@ final class Cart_Products {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function shipping_classes_template() { ?>
+	public function shipping_classes_template() {
+		$model_values = array(
+			'model' => 'shipping_classes',
+			'hold_data' => 'hold_shipping_classes',
+			'data_type' => 'taxonomy:product_shipping_class',
+		); ?>
+
 		<template v-if="type == 'cart_products:shipping_classes'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'all_in_list', 'not_in_list')); ?>
 			</select>
 
-			<div class="loading-indicator" v-if="loading_shipping_classes"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="shipping_classes" data-type="taxonomy:product_shipping_class">
+			<div class="loading-indicator" v-if="loading"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="shipping_class in get_ui_data_items('hold_shipping_classes')" :value="shipping_class.id" :selected="shipping_classes.includes(shipping_class.id.toString())">{{shipping_class.name}}</option>
 			</select>
 

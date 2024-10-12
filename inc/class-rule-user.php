@@ -48,7 +48,6 @@ final class User {
 	public function rule_ui_values($values) {
 		return array_merge($values, array(
 			'hold_users' => [],
-			'loading_users' => false,
 		));
 	}
 
@@ -89,14 +88,20 @@ final class User {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function users_template() { ?>
+	public function users_template() {
+		$model_values = array(
+			'model' => 'users',
+			'data_type' => 'users',
+			'hold_data' => 'hold_users',
+		); ?>
+
 		<template v-if="type == 'user:users'">
 			<select v-model="operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 
-			<div class="loading-indicator" v-if="loading_users"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'hide-shipping-rates-for-woocommerce'); ?>" data-model="users" data-type="users">
+			<div class="loading-indicator" v-if="loading"></div>
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="user in get_ui_data_items('hold_users')" :value="user.id" :selected="users.includes(user.id.toString())">{{user.name}}</option>
 			</select>
 		</template>

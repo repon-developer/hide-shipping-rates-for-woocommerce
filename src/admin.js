@@ -18,6 +18,14 @@
 		});
 	}
 
+	const get_select2_ajax_model_data = (element) => {
+		return Object.assign({
+			model: 'placeholder',
+			data_type: 'data_type_placeholder',
+			hold_data: 'hold_data_placeholder',
+		}, element.data('model-values'))
+	}
+
 	const Rule = {
 		template: '#component-hide-shipping-rates-rule',
 
@@ -51,7 +59,7 @@
 
 		mounted() {
 			wp.hooks.doAction('hide_shipping_rates_rule_mounted', this);
-			this.pre_load_layout_data();
+			this.preload_layout_data();
 		},
 
 		beforeUpdate() {
@@ -71,11 +79,13 @@
 					type: "POST",
 					delay: 500,
 					data: function (params) {
+						const values_map = get_select2_ajax_model_data($(this));
+
 						return {
 							country: $(this).attr('data-country'),
 							term: params.term,
-							type: $(this).data('type'),
-							security: hide_shipping_rates_admin.nonce_select2,
+							type: values_map.data_type,
+							security: hide_shipping_rates_admin.nonce_select2_data,
 							action: 'hide_shipping_rates/get_select2_data'
 						}
 					},
@@ -89,9 +99,9 @@
 					}
 				}
 			}).on('change', function () {
-				const selected_model = $(this).data('model');
-				if (selected_model && selected_model.length) {
-					self[selected_model] = $(this).val();
+				const field_model = get_select2_ajax_model_data($(this)).model;
+				if (field_model.length) {
+					self[field_model] = $(this).val();
 				}
 			})
 
@@ -110,7 +120,13 @@
 
 		watch: {
 			type() {
-				this.pre_load_layout_data();
+				this.preload_layout_data();
+			},
+
+			cart_value_type: function (value) {
+				if (['in_categories', 'in_tags', 'in_shipping_classes'].includes(value)) {
+					this.preload_layout_data();
+				}
 			},
 
 			...wp.hooks.applyFilters('hide_shipping_rates_rule_watch', {}, this)
@@ -132,176 +148,39 @@
 				}
 			},
 
-			pre_load_layout_data() {
+			preload_layout_data() {
 				const self = this;
 
-				(function () {
-					if (self.type !== 'cart_products:products' || self.cart_products.length == 0) {
+				this.$nextTick(() => {
+					const values_map = get_select2_ajax_model_data($(this.$refs.select2_ajax));
+					if (!self[values_map.model] || !self[values_map.model].length) {
 						return
 					}
 
-					self.loading_products = true;
+					self.loading = true;
 
 					const formData = new FormData();
-					self.cart_products.forEach((product) => {
+					self[values_map.model].forEach((product) => {
 						formData.append('ids[]', product);
 					})
 
-					formData.append('type', 'post_type:product')
-					formData.append('security', hide_shipping_rates_admin.nonce_select2)
+					formData.append('type', values_map.data_type)
+					formData.append('security', hide_shipping_rates_admin.nonce_select2_data)
 					formData.append('action', 'hide_shipping_rates/get_select2_data')
+
+					wp.hooks.doAction('hide_shipping_rates_select2_model_form_data', this, formData);
 
 					fetch(hide_shipping_rates_admin.ajax_url, {
 						method: 'POST',
 						body: formData
 					}).then((response) => response.json()).then((result) => {
 						if (result.success == true) {
-							self.hold_products = result.data;
+							self[values_map.hold_data] = result.data;
 						}
 					}).finally(() => {
-						self.loading_products = false;
+						self.loading = false;
 					})
-				})();
-
-				(function () {
-					if (self.type !== 'cart_products:categories' || self.categories.length == 0) {
-						return
-					}
-
-					self.loading_categories = true;
-
-					const formData = new FormData();
-					self.categories.forEach((category_id) => {
-						formData.append('term_ids[]', category_id);
-					})
-
-					formData.append('type', 'taxonomy:product_cat')
-					formData.append('security', hide_shipping_rates_admin.nonce_select2)
-					formData.append('action', 'hide_shipping_rates/get_select2_data')
-
-					fetch(hide_shipping_rates_admin.ajax_url, {
-						method: 'POST',
-						body: formData
-					}).then((response) => response.json()).then((result) => {
-						if (result.success == true) {
-							self.hold_categories = result.data;
-						}
-					}).finally(() => {
-						self.loading_categories = false;
-					})
-				})();
-
-				(function () {
-					if (self.type !== 'cart_products:tags' || self.tags.length == 0) {
-						return
-					}
-
-					self.loading_tags = true;
-
-					const formData = new FormData();
-					self.tags.forEach((tag_id) => {
-						formData.append('term_ids[]', tag_id);
-					})
-
-					formData.append('type', 'taxonomy:product_tag')
-					formData.append('security', hide_shipping_rates_admin.nonce_select2)
-					formData.append('action', 'hide_shipping_rates/get_select2_data')
-
-					fetch(hide_shipping_rates_admin.ajax_url, {
-						method: 'POST',
-						body: formData
-					}).then((response) => response.json()).then((result) => {
-						if (result.success == true) {
-							self.hold_tags = result.data;
-						}
-					}).finally(() => {
-						self.loading_tags = false;
-					})
-				})();
-
-				(function () {
-					if (self.type !== 'cart_products:shipping_classes' || self.shipping_classes.length == 0) {
-						return
-					}
-
-					self.loading_shipping_classes = true;
-
-					const formData = new FormData();
-					self.shipping_classes.forEach((shipping_class) => {
-						formData.append('term_ids[]', shipping_class);
-					})
-
-					formData.append('type', 'taxonomy:product_shipping_class')
-					formData.append('security', hide_shipping_rates_admin.nonce_select2)
-					formData.append('action', 'hide_shipping_rates/get_select2_data')
-
-					fetch(hide_shipping_rates_admin.ajax_url, {
-						method: 'POST',
-						body: formData
-					}).then((response) => response.json()).then((result) => {
-						if (result.success == true) {
-							self.hold_shipping_classes = result.data;
-						}
-					}).finally(() => {
-						self.loading_shipping_classes = false;
-					})
-				})();
-
-				(function () {
-					if (self.type !== 'user:users' || self.users.length == 0) {
-						return;
-					}
-
-					self.loading_users = true;
-
-					const formData = new FormData();
-					self.users.forEach((user_id) => {
-						formData.append('user_ids[]', user_id);
-					})
-
-					formData.append('type', 'users')
-					formData.append('security', hide_shipping_rates_admin.nonce_select2)
-					formData.append('action', 'hide_shipping_rates/get_select2_data')
-
-					fetch(hide_shipping_rates_admin.ajax_url, {
-						method: 'POST',
-						body: formData
-					}).then((response) => response.json()).then((result) => {
-						if (result.success == true) {
-							self.hold_users = result.data;
-						}
-					}).finally(() => {
-						self.loading_users = false;
-					})
-				})();
-
-				(function () {
-					if (self.type !== 'cart:coupons' || self.coupons.length == 0) {
-						return
-					}
-
-					self.loading_coupon = true;
-
-					const formData = new FormData();
-					self.coupons.forEach((coupon_id) => {
-						formData.append('ids[]', coupon_id);
-					})
-
-					formData.append('type', 'post_type:shop_coupon')
-					formData.append('security', hide_shipping_rates_admin.nonce_select2)
-					formData.append('action', 'hide_shipping_rates/get_select2_data')
-
-					fetch(hide_shipping_rates_admin.ajax_url, {
-						method: 'POST',
-						body: formData
-					}).then((response) => response.json()).then((result) => {
-						if (result.success == true) {
-							self.hold_coupons = result.data;
-						}
-					}).finally(() => {
-						self.loading_coupon = false;
-					})
-				})();
+				});
 
 				wp.hooks.doAction('hide_shipping_rates_rule_preload', this);
 			},
