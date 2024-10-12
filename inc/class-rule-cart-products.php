@@ -36,8 +36,8 @@ final class Cart_Products {
 	public function rule_values($values) {
 		return array_merge($values, array(
 			'tags' => [],
+			'products' => [],
 			'categories' => [],
-			'cart_products' => [],
 			'shipping_classes' => [],
 		));
 	}
@@ -64,6 +64,74 @@ final class Cart_Products {
 	 * @return boolean
 	 */
 	public function rule_filters($matched, $rule) {
+		if ('cart_products:products' === $rule['type']) {
+			$rule_products = isset($rule['products']) && is_array($rule['products']) ? $rule['products'] : array();
+
+			$cart_products = [];
+			foreach (WC()->cart->get_cart() as $item) {
+				$cart_products[] = $item['product_id'];
+			}
+
+			$cart_products = array_unique(array_filter($cart_products));
+
+			$matched_items = array_intersect($rule_products, $cart_products);
+			if ('any_in_list' == $rule['operator'] && count($matched_items) > 0) {
+				return true;
+			}
+
+			if ('all_in_list' == $rule['operator'] && count($matched_items) === count($rule_products)) {
+				return true;
+			}
+
+			if ('not_in_list' == $rule['operator'] && 0 === count($matched_items)) {
+				return true;
+			}
+		}
+
+		if ('cart_products:categories' === $rule['type']) {
+			$rule_terms = isset($rule['categories']) && is_array($rule['categories']) ? $rule['categories'] : array();
+
+			$cart_terms = [];
+			foreach (WC()->cart->get_cart() as $item) {
+				$cart_terms = array_merge($cart_terms, wc_get_product_term_ids($item['product_id'], 'product_cat'));
+			}
+
+			$matched_items = array_intersect($cart_terms, $rule_terms);
+			if ('any_in_list' == $rule['operator'] && count($matched_items) > 0) {
+				return true;
+			}
+
+			if ('all_in_list' == $rule['operator'] && count($rule_terms) === count($matched_items)) {
+				return true;
+			}
+
+			if ('not_in_list' == $rule['operator'] && 0 === count($matched_items)) {
+				return true;
+			}
+		}
+
+		if ('cart_products:tags' === $rule['type']) {
+			$rule_terms = isset($rule['tags']) && is_array($rule['tags']) ? $rule['tags'] : array();
+
+			$cart_terms = [];
+			foreach (WC()->cart->get_cart() as $item) {
+				$cart_terms = array_merge($cart_terms, wc_get_product_term_ids($item['product_id'], 'product_tag'));
+			}
+
+			$matched_items = array_intersect($cart_terms, $rule_terms);
+			if ('any_in_list' == $rule['operator'] && count($matched_items) > 0) {
+				return true;
+			}
+
+			if ('all_in_list' == $rule['operator'] && count($rule_terms) === count($matched_items)) {
+				return true;
+			}
+
+			if ('not_in_list' == $rule['operator'] && 0 === count($matched_items)) {
+				return true;
+			}
+		}
+
 		if ('cart_products:shipping_classes' === $rule['type']) {
 			$shipping_classes = isset($rule['shipping_classes']) && is_array($rule['shipping_classes']) ? $rule['shipping_classes'] : array();
 
@@ -74,7 +142,7 @@ final class Cart_Products {
 			}
 
 			$product_shipping_classes = array_unique(array_filter($product_shipping_classes));
-			
+
 			$matched_items = array_intersect($shipping_classes, $product_shipping_classes);
 			if ('any_in_list' == $rule['operator'] && count($matched_items) > 0) {
 				return true;
@@ -98,9 +166,9 @@ final class Cart_Products {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function products_template() { 
+	public function products_template() {
 		$model_values = array(
-			'model' => 'cart_products',
+			'model' => 'products',
 			'hold_data' => 'hold_products',
 			'data_type' => 'post_type:product',
 		); ?>
@@ -110,8 +178,8 @@ final class Cart_Products {
 			</select>
 
 			<div class="loading-indicator" v-if="loading"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Products', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
-				<option v-for="product in get_ui_data_items('hold_products')" :value="product.id" :selected="cart_products.includes(product.id.toString())">{{product.name}}</option>
+			<select class="select2-flex1" v-model="products" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Products', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
+				<option v-for="product in get_ui_data_items('hold_products')" :value="product.id">{{product.name}}</option>
 			</select>
 
 			<div class="guideline" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if any of the above products are available in the cart.', 'hide-shipping-rates-for-woocommerce') ?></div>
@@ -140,8 +208,8 @@ final class Cart_Products {
 			</select>
 
 			<div class="loading-indicator" v-if="loading"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Tags', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
-				<option v-for="tag in get_ui_data_items('hold_tags')" :value="tag.id" :selected="tags.includes(tag.id.toString())">{{tag.name}}</option>
+			<select class="select2-flex1" v-model="tags" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Tags', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
+				<option v-for="tag in get_ui_data_items('hold_tags')" :value="tag.id">{{tag.name}}</option>
 			</select>
 
 			<div class="guideline" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any tag in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
@@ -170,8 +238,8 @@ final class Cart_Products {
 			</select>
 
 			<div class="loading-indicator" v-if="loading"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Categories', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
-				<option v-for="category in get_ui_data_items('hold_categories')" :value="category.id" :selected="categories.includes(category.id.toString())">{{category.name}}</option>
+			<select class="select2-flex1" v-model="categories" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Categories', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
+				<option v-for="category in get_ui_data_items('hold_categories')" :value="category.id">{{category.name}}</option>
 			</select>
 
 			<div class="guideline" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the cart products contain any category in the above list.', 'hide-shipping-rates-for-woocommerce') ?></div>
@@ -200,8 +268,8 @@ final class Cart_Products {
 			</select>
 
 			<div class="loading-indicator" v-if="loading"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
-				<option v-for="shipping_class in get_ui_data_items('hold_shipping_classes')" :value="shipping_class.id" :selected="shipping_classes.includes(shipping_class.id.toString())">{{shipping_class.name}}</option>
+			<select class="select2-flex1" v-model="shipping_classes" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Shipping Classes', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
+				<option v-for="shipping_class in get_ui_data_items('hold_shipping_classes')" :value="shipping_class.id">{{shipping_class.name}}</option>
 			</select>
 
 			<div class="guideline" v-if="'any_in_list' == operator"><?php esc_html_e('This rule will be matched if the any of above shipping classes are available in the cart products.', 'hide-shipping-rates-for-woocommerce') ?></div>
