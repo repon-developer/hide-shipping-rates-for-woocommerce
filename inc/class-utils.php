@@ -365,8 +365,8 @@ class Utils {
 				if (!self::license_activated()) {
 					echo '<div class="locked-message locked-message-activate-license">';
 					$message = sprintf(
-						/* translators: %1$s: Link open, %2$s: Link close */
-						esc_html__('Please activate your license for unlock this feature. %sClick here%s for activate license.', 'hide-shipping-rates-for-woocommerce'),
+						/* translators: %1$s: Link open, %2%s: Link close */
+						esc_html__('Please activate your license for unlock this feature. %1$sClick here%2$s for activate license.', 'hide-shipping-rates-for-woocommerce'),
 						'<a href="#" class="btn-open-hide-shipping-rates-license-form">',
 						'</a>'
 					);

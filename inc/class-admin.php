@@ -180,7 +180,7 @@ final class Admin {
 		wp_register_script('sortable', HIDE_SHIPPING_RATES_URI . 'assets/sortable.min.js', [], '1.15.2', true);
 		wp_register_script('vue-sortable', HIDE_SHIPPING_RATES_URI . 'assets/vue-sortable.js', ['hide-shipping-rates-vue', 'sortable'], '1.0.7', true);
 
-		wp_register_style('select2', HIDE_SHIPPING_RATES_URI . 'assets/select2.min.css');
+		wp_register_style('select2', HIDE_SHIPPING_RATES_URI . 'assets/select2.min.css', [], '4.1.0');
 		wp_enqueue_style('hide-shipping-rates', HIDE_SHIPPING_RATES_URI . 'assets/admin.min.css', ['select2'], HIDE_SHIPPING_RATES_VERSION);
 
 		do_action('hide_shipping_rates/admin_enqueue_scripts');

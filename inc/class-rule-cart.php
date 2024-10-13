@@ -202,10 +202,10 @@ final class Cart {
 	 */
 	public function cart_common_fields() { ?>
 		<select v-model="cart_value_type">
-			<option value="in_cart"><?php esc_html_e('In Cart', 'advanced-coupon-for-woocommerce'); ?></option>
-			<option disabled><?php esc_html_e('In Tags (Pro)', 'advanced-coupon-for-woocommerce'); ?></option>
-			<option disabled><?php esc_html_e('In Categories (Pro)', 'advanced-coupon-for-woocommerce'); ?></option>
-			<option disabled><?php esc_html_e('In Shipping Classes (Pro)', 'advanced-coupon-for-woocommerce'); ?></option>
+			<option value="in_cart"><?php esc_html_e('In Cart', 'hide-shipping-rates-for-woocommerce'); ?></option>
+			<option disabled><?php esc_html_e('In Tags (Pro)', 'hide-shipping-rates-for-woocommerce'); ?></option>
+			<option disabled><?php esc_html_e('In Categories (Pro)', 'hide-shipping-rates-for-woocommerce'); ?></option>
+			<option disabled><?php esc_html_e('In Shipping Classes (Pro)', 'hide-shipping-rates-for-woocommerce'); ?></option>
 		</select>
 <?php
 	}
