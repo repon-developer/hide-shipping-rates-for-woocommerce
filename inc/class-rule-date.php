@@ -21,9 +21,9 @@ final class Date {
 		add_filter('hide_shipping_rates/rule_matched', array($this, 'rule_filters'), 10, 2);
 
 		add_action('hide_shipping_rates/rule_templates', array($this, 'weekly_days'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'between_times'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'before_time'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'after_time'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'between_times'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'between_dates'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'before_datetime'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'after_datetime'));
@@ -38,8 +38,10 @@ final class Date {
 	public function rule_values($values) {
 		return array_merge($values, array(
 			'weekly_days' => [],
-			'after_datetime' => '',
+			'before_time' => '',
 			'after_time' => '',
+			'before_datetime' => '',
+			'after_datetime' => '',
 		));
 	}
 
@@ -167,10 +169,9 @@ final class Date {
 	 * @return void
 	 */
 	public function before_time() { ?>
-		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:before_time'">
-			<input type="time">
-			<?php Utils::field_lock_message(); ?>
-		</div>
+		<template v-if="type == 'date:before_time'">
+			<input type="time" v-model="before_time">
+		</template>
 	<?php
 	}
 
@@ -181,9 +182,7 @@ final class Date {
 	 * @return void
 	 */
 	public function after_time() { ?>
-		<template v-if="type == 'date:after_time'">
-			<input type="time" v-model="after_time">
-		</template>
+		<input type="time" v-model="after_time" v-if="type == 'date:after_time'">
 	<?php
 	}
 
@@ -210,10 +209,7 @@ final class Date {
 	 * @return void
 	 */
 	public function before_datetime() { ?>
-		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:before_datetime'">
-			<input type="datetime-local">
-			<?php Utils::field_lock_message(); ?>
-		</div>
+		<input type="datetime-local" v-model="before_datetime" v-if="type == 'date:before_datetime'">
 	<?php
 	}
 

@@ -2,7 +2,7 @@
 Contributors: repon.wp
 Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping
 Requires at least: 5.0
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -20,6 +20,7 @@ Easily hide WooCommerce shipping rates based on cart total, weight, quantity, pr
 - **Hide Shipping Rates by Product Shipping Class**: Restrict shipping methods based on product shipping classes.
 - **Hide Shipping Rates by Shipping/Billing Address**: Create location-based conditions to hide shipping methods.
 - **Hide Shipping Rates by User Roles**: Show or hide specific shipping methods depending on the user’s role (e.g., guest, customer, administrator).
+- **Hide Shipping Rates by Order History**: Show or hide specific shipping methods depending on the user’s order history.
 - **Flexible & Easy Setup**: Create rules quickly with an intuitive user interface.
 
 ### Why Choose Hide Shipping Rates for WooCommerce?
