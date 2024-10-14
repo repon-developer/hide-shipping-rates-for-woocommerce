@@ -1,4 +1,4 @@
-=== Hide Shipping Rates for WooCommerce ===
+=== Hide Shipping Rates for WooCommerce, Conditional Based Shipping Method ===
 Contributors: repon.wp
 Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping
 Requires at least: 5.0
@@ -11,7 +11,7 @@ Easily hide WooCommerce shipping rates based on cart total, weight, quantity, pr
 
 == Description ==
 
-**Hide Shipping Rates for WooCommerce** is a powerful plugin designed to give WooCommerce store owners complete control over how shipping rates are displayed at checkout. It enables you to hide shipping methods under specific conditions such as cart total, product weight, number of items, customer’s location, or user roles. This ensures a more efficient and customized checkout process, reducing confusion and streamlining operations for both store owners and customers.
+**Hide Shipping Rates for WooCommerce** is a powerful plugin designed to give WooCommerce store owners complete control over how shipping rates are displayed at checkout. With its Conditional Based Shipping Method, you can hide shipping rates based on a variety of flexible conditions, ensuring that customers see only the shipping methods that are relevant to their order. It enables you to hide shipping methods under specific conditions such as cart total, product weight, number of items, customer’s location, or user roles. This ensures a more efficient and customized checkout process, reducing confusion and streamlining operations for both store owners and customers.
 
 ### Key Features of Hide Shipping Rates for WooCommerce:
 - **Hide Shipping Rates by Cart Total**: Hide shipping options when the cart total reaches or falls below a specified value.
