@@ -21,12 +21,8 @@ final class Date {
 		add_filter('hide_shipping_rates/rule_matched', array($this, 'rule_filters'), 10, 2);
 
 		add_action('hide_shipping_rates/rule_templates', array($this, 'weekly_days'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'before_time'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'after_time'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'between_times'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'between_dates'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'before_datetime'));
-		add_action('hide_shipping_rates/rule_templates', array($this, 'after_datetime'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'time_template'));
+		add_action('hide_shipping_rates/rule_templates', array($this, 'date_template'));
 	}
 
 	/**
@@ -37,11 +33,12 @@ final class Date {
 	 */
 	public function rule_values($values) {
 		return array_merge($values, array(
-			'weekly_days' => [],
-			'before_time' => '',
-			'after_time' => '',
-			'before_datetime' => '',
-			'after_datetime' => '',
+			'date_operator' => '',
+			'time_one' => '',
+			'time_two' => '',
+			'date_one' => '',
+			'date_two' => '',
+			'weekly_days' => []
 		));
 	}
 
@@ -52,7 +49,6 @@ final class Date {
 	 * @return boolean
 	 */
 	public function rule_filters($matched, $rule) {
-		//error_log(print_r($rule, true));
 		if ('date:weekly_days' === $rule['type']) {
 			$weekly_days = isset($rule['weekly_days']) && is_array($rule['weekly_days']) ? $rule['weekly_days'] : array();
 			$current_day = strtolower(current_time('l'));
@@ -66,59 +62,97 @@ final class Date {
 			}
 		}
 
-		if ('date:before_datetime' === $rule['type']) {
-			if (empty($rule['before_datetime'])) {
+		$operator = $rule['date_operator'];
+
+		if ('date:time' === $rule['type']) {
+			$time_one = strtotime($rule['time_one']);
+			if (false === $time_one) {
 				return $matched;
 			}
 
-			$before_datetime = strtotime($rule['before_datetime']);
-			if (false === $before_datetime) {
-				return $matched;
+			if ('before' === $operator) {
+				return current_time('timestamp') < $time_one;
 			}
 
-			return current_time('timestamp') < $before_datetime;
+			if ('after' === $operator) {
+				return current_time('timestamp') > $time_one;
+			}
+
+			if ('between' === $operator) {
+				$time_two = strtotime($rule['time_two']);
+				if (false === $time_two) {
+					return $matched;
+				}
+
+				$current_time = current_time('timestamp');
+
+				return ($current_time >= $time_one && $current_time <= $time_two);
+			}
 		}
 
-		if ('date:after_datetime' === $rule['type']) {
-			if (empty($rule['after_datetime'])) {
+		if ('date:date' === $rule['type']) {
+			$date_one = strtotime($rule['date_one']);
+			if (false === $date_one) {
 				return $matched;
 			}
 
-			$after_datetime = strtotime($rule['after_datetime']);
-			if (false === $after_datetime) {
-				return $matched;
+			if ('before' === $operator) {
+				return current_time('timestamp') < $date_one;
 			}
 
-			return current_time('timestamp') > $after_datetime;
-		}
-
-		if ('date:before_time' === $rule['type']) {
-			if (empty($rule['before_time'])) {
-				return $matched;
+			if ('after' === $operator) {
+				return current_time('timestamp') > $date_one;
 			}
 
-			$before_time = strtotime($rule['before_time']);
-			if (false === $before_time) {
-				return $matched;
+			if ('between' === $operator) {
+				$date_two = strtotime($rule['date_two']);
+				if (false === $date_two) {
+					return $matched;
+				}
+
+				$current_time = current_time('timestamp');
+
+				return ($current_time >= $date_one && $current_time <= $date_two);
 			}
-
-			return current_time('timestamp') < $before_time;
-		}
-
-		if ('date:after_time' === $rule['type']) {
-			if (empty($rule['after_time'])) {
-				return $matched;
-			}
-
-			$after_time = strtotime($rule['after_time']);
-			if (false === $after_time) {
-				return $matched;
-			}
-
-			return current_time('timestamp') > $after_time;
 		}
 
 		return $matched;
+	}
+
+	/**
+	 * Add time template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function time_template() { ?>
+		<template v-if="type == 'date:time'">
+			<select v-model="date_operator">
+				<?php Utils::get_operators_options(array('before', 'after', 'between')); ?>
+			</select>
+
+			<input type="time" v-model="time_one">
+			<input type="time" v-model="time_two" v-if="date_operator == 'between'">
+		</template>
+	<?php
+	}
+
+	/**
+	 * Add date template
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function date_template() { ?>
+		<template v-if="type == 'date:date'">
+			<select v-model="date_operator">
+				<?php Utils::get_operators_options(array('before', 'after', 'between')); ?>
+			</select>
+
+			<input type="datetime-local" v-model="date_one">
+			<input type="datetime-local" v-model="date_two" v-if="date_operator == 'between'">
+		</template>
+	<?php
 	}
 
 	/**
@@ -142,86 +176,6 @@ final class Date {
 				<option value="friday"><?php esc_html_e('Friday', 'hide-shipping-rates-for-woocommerce'); ?></option>
 				<option value="saturday"><?php esc_html_e('Saturday', 'hide-shipping-rates-for-woocommerce'); ?></option>
 			</select>
-		</template>
-	<?php
-	}
-
-	/**
-	 * Add between times template
-	 * 
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function between_times() { ?>
-		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:between_times'">
-			<input type="time">
-			<input type="time">
-
-			<?php Utils::field_lock_message(); ?>
-		</div>
-	<?php
-	}
-
-	/**
-	 * Add before time template
-	 * 
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function before_time() { ?>
-		<template v-if="type == 'date:before_time'">
-			<input type="time" v-model="before_time">
-		</template>
-	<?php
-	}
-
-	/**
-	 * Add after time template
-	 * 
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function after_time() { ?>
-		<input type="time" v-model="after_time" v-if="type == 'date:after_time'">
-	<?php
-	}
-
-	/**
-	 * Add between dates template of rule
-	 * 
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function between_dates() { ?>
-		<div class="hide-shipping-rates-pro-field" v-if="type == 'date:between_dates'">
-			<input type="datetime-local">
-			<input type="datetime-local">
-
-			<?php Utils::field_lock_message(); ?>
-		</div>
-	<?php
-	}
-
-	/**
-	 * Add before datetime rule template
-	 * 
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function before_datetime() { ?>
-		<input type="datetime-local" v-model="before_datetime" v-if="type == 'date:before_datetime'">
-	<?php
-	}
-
-	/**
-	 * Add after datetime rule template
-	 * 
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function after_datetime() { ?>
-		<template v-if="type == 'date:after_datetime'">
-			<input type="datetime-local" v-model="after_datetime">
 		</template>
 <?php
 	}

@@ -87,10 +87,13 @@ class Utils {
 			'less_than_or_equal' => __('Less than or equal ( <= )', 'hide-shipping-rates-for-woocommerce'),
 			'greater_than_or_equal' => __('Greater than or equal ( >= )', 'hide-shipping-rates-for-woocommerce'),
 			'greater_than' => __('Greater than ( > )', 'hide-shipping-rates-for-woocommerce'),
-			'between_values' => __('Between values', 'hide-shipping-rates-for-woocommerce'),
+			'between' => __('Between', 'hide-shipping-rates-for-woocommerce'),
 			'any_in_list' => __('Any in list', 'hide-shipping-rates-for-woocommerce'),
 			'all_in_list' => __('All in list', 'hide-shipping-rates-for-woocommerce'),
 			'not_in_list' => __('Not in list', 'hide-shipping-rates-for-woocommerce'),
+
+			'before' => __('Before', 'hide-shipping-rates-for-woocommerce'),
+			'after' => __('After', 'hide-shipping-rates-for-woocommerce'),
 		);
 
 		$return_operators = [];
@@ -198,40 +201,20 @@ class Utils {
 			),
 
 			/** Date related field types */
-			'date:weekly_days' => array(
+			'date:time' => array(
 				'group' => 'date',
 				'priority' => 5,
-				'label' => __('Weekly Days', 'hide-shipping-rates-for-woocommerce'),
+				'label' => __('Time', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'date:before_time' => array(
+			'date:date' => array(
 				'group' => 'date',
 				'priority' => 10,
-				'label' => __('Before Time', 'hide-shipping-rates-for-woocommerce'),
+				'label' => __('Date', 'hide-shipping-rates-for-woocommerce'),
 			),
-			'date:after_time' => array(
+			'date:weekly_days' => array(
 				'group' => 'date',
 				'priority' => 15,
-				'label' => __('After Time', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'date:between_times' => array(
-				'group' => 'date',
-				'priority' => 20,
-				'label' => __('Between Times', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'date:before_datetime' => array(
-				'group' => 'date',
-				'priority' => 30,
-				'label' => __('Before Date', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'date:after_datetime' => array(
-				'group' => 'date',
-				'priority' => 35,
-				'label' => __('After Date', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'date:between_dates' => array(
-				'group' => 'date',
-				'priority' => 40,
-				'label' => __('Between Dates', 'hide-shipping-rates-for-woocommerce'),
+				'label' => __('Weekly Days', 'hide-shipping-rates-for-woocommerce'),
 			),
 
 			/** Billing address related field types */

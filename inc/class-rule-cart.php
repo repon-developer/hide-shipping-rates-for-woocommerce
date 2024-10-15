@@ -155,11 +155,11 @@ final class Cart {
 	public function common_templates() { ?>
 		<template v-if="['cart:subtotal', 'cart:total_quantity', 'cart:total_weight'].includes(type)">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than', 'between_values')); ?>
+				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than', 'between')); ?>
 			</select>
 
 			<input type="number" step="0.01" v-model="value" placeholder="<?php echo '0.00'; ?>" style="width: 80px!important;text-align:center">
-			<input type="number" step="0.01" v-model="value_two" placeholder="<?php echo '0.00'; ?>" v-if="'between_values' == operator" style="width: 80px!important;text-align:center">
+			<input type="number" step="0.01" v-model="value_two" placeholder="<?php echo '0.00'; ?>" v-if="'between' == operator" style="width: 80px!important;text-align:center">
 			<?php do_action('hide_shipping_rates/cart_common_fields') ?>
 		</template>
 	<?php
