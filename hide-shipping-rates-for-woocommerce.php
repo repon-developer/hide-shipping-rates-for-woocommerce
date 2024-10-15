@@ -29,7 +29,7 @@ define('HIDE_SHIPPING_RATES_PATH', trailingslashit(plugin_dir_path(__FILE__)));
 define('HIDE_SHIPPING_RATES_PHP_MIN', '7.4.3');
 
 define('HIDE_SHIPPING_RATES_API_URI', 'https://codiepress.com');
-define('HIDE_SHIPPING_RATES_PRODUCT_ID', 925);
+define('HIDE_SHIPPING_RATES_PLUGIN_ID', 925);
 
 /**
  * Check PHP version. Show notice if version of PHP less than our 7.4.3 
