@@ -1,4 +1,4 @@
-=== Hide Shipping Rates for WooCommerce, Conditional Based Shipping Method ===
+=== Hide Shipping Rates for WooCommerce, Conditional Shipping Method ===
 Contributors: repon.wp
 Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping, hide shipping methods
 Requires at least: 5.0
