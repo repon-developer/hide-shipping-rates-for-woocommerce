@@ -24,6 +24,8 @@ final class Admin {
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'), 100);
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts_global'), 1);
 		add_action('wp_ajax_hide_shipping_rates/get_select2_data', array($this, 'get_select2_data'));
+		add_action('hide_shipping_rates/after_shipping_rules', array($this, 'add_rule_settings'));
+		add_action('hide_shipping_rates/after_shipping_rules', array($this, 'alternate_matched_result_setting'), 1);
 	}
 
 	/**
@@ -54,6 +56,63 @@ final class Admin {
 		);
 
 		return $settings;
+	}
+
+	/**
+	 * Add some settings of hide shipping rates
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function add_rule_settings() { ?>
+		<div class="hide-shipping-rates-field-row">
+			<label>
+				<input type="checkbox" v-model="hide_shipping_rate">
+				<?php esc_html_e('Hide this shipping rate on frontend.', 'hide-shipping-rates-for-woocommerce'); ?>
+			</label>
+
+			<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Only the store manager will be able to see this. Use for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
+		</div>
+
+		<div class="hide-shipping-rates-field-row" v-if="hide_shipping_rate !== true">
+			<label>
+				<input type="checkbox" v-model="disable_shipping_rules">
+				<?php esc_html_e('Disable all rules for customers.', 'hide-shipping-rates-for-woocommerce'); ?>
+			</label>
+
+			<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Rule functionality will be applied only for store managers. Use this for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
+		</div>
+	<?php
+	}
+
+	/**
+	 * Add setting for alternate rule matched result
+	 * 
+	 * @since 1.0.1
+	 * @return void
+	 */
+	public function alternate_matched_result_setting() { ?>
+		<div class="hide-shipping-rates-field-row">
+			<label>
+				<input type="checkbox" disabled>
+				<?php esc_html_e('Alternate result of matched rules (pro).', 'hide-shipping-rates-for-woocommerce'); ?>
+
+				<?php if (!Utils::has_pro_installed()): ?>
+					<a href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=modal&utm_medium=shipping+methods&utm_content=alternate+rule+result"><?php esc_html_e('Get pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
+				<?php endif; ?>
+
+				<?php if (Utils::has_pro_installed() && !Utils::is_pro_activated()): ?>
+					<?php esc_html_e('Activate the pro version.', 'hide-shipping-rates-for-woocommerce'); ?>
+				<?php endif; ?>
+
+				<?php if (Utils::is_pro_activated() && !Utils::license_activated()): ?>
+					<a class="btn-open-hide-shipping-rates-license-form" href="#"><?php esc_html_e('Activate license of the pro version.', 'hide-shipping-rates-for-woocommerce'); ?></a>
+				<?php endif; ?>
+			</label>
+
+			<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Alternate result of matched rules. The result will be false if the rule matches and true if the rule does not match.', 'hide-shipping-rates-for-woocommerce') ?></div>
+		</div>
+	<?php
 	}
 
 	/**
@@ -98,23 +157,7 @@ final class Admin {
 
 					<div style="margin-top: 20px"></div>
 
-					<div class="hide-shipping-rates-field-row">
-						<label>
-							<input type="checkbox" v-model="hide_shipping_rate">
-							<?php esc_html_e('Hide this shipping rate on frontend.', 'hide-shipping-rates-for-woocommerce'); ?>
-						</label>
-
-						<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Only the store manager will be able to see this. Use for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
-					</div>
-
-					<div class="hide-shipping-rates-field-row" v-if="hide_shipping_rate !== true">
-						<label>
-							<input type="checkbox" v-model="disable_shipping_rules">
-							<?php esc_html_e('Disable all rules for customers.', 'hide-shipping-rates-for-woocommerce'); ?>
-						</label>
-
-						<div style="padding-left: 24px;" class="guideline"><?php esc_html_e('Rule functionality will be applied only for store managers. Use this for test purposes only.', 'hide-shipping-rates-for-woocommerce') ?></div>
-					</div>
+					<?php do_action('hide_shipping_rates/after_shipping_rules') ?>
 				</div>
 			</td>
 		</tr>
@@ -210,7 +253,7 @@ final class Admin {
 						$text = sprintf(
 							/* translators: %s for link */
 							esc_html__('To add more rules, please get a pro version from %s.', 'hide-shipping-rates-for-woocommerce'),
-							'<a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=modal&utm_medium=shipping+methods">' . esc_html__('here', 'hide-shipping-rates-for-woocommerce') . '</a>'
+							'<a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=modal&utm_medium=shipping+methods">' . esc_html__('here', 'hide-shipping-rates-for-woocommerce') . '</a>'
 						);
 
 						echo wp_kses($text, array('a' => array('href' => true, 'target' => true)));
@@ -219,7 +262,7 @@ final class Admin {
 
 					<div class="modal-footer">
 						<a class="button" data-modal-close href="#"><?php esc_html_e('Close', 'hide-shipping-rates-for-woocommerce'); ?></a>
-						<a class="button button-get-pro" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=modal&utm_medium=shipping+methods" target="_blank"><?php esc_html_e('Get Pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
+						<a class="button button-get-pro" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=modal&utm_medium=shipping+methods" target="_blank"><?php esc_html_e('Get Pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
 					</div>
 				</div>
 			</div>

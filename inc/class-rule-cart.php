@@ -107,6 +107,10 @@ final class Cart {
 			return true;
 		}
 
+		if ('not_between' === $operator && ($compare_value < $value_one || $compare_value > $value_two)) {
+			return true;
+		}
+
 		return $matched;
 	}
 
@@ -154,11 +158,11 @@ final class Cart {
 	public function common_templates() { ?>
 		<template v-if="['cart:subtotal', 'cart:total_quantity', 'cart:total_weight'].includes(type)">
 			<select v-model="operator">
-				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than', 'between')); ?>
+				<?php Utils::get_operators_options(array('equal_to', 'less_than', 'less_than_or_equal', 'greater_than_or_equal', 'greater_than', 'between', 'not_between')); ?>
 			</select>
 
 			<input type="number" step="0.01" v-model="value" placeholder="<?php echo '0.00'; ?>" style="width: 80px!important;text-align:center">
-			<input type="number" step="0.01" v-model="value_two" placeholder="<?php echo '0.00'; ?>" v-if="'between' == operator" style="width: 80px!important;text-align:center">
+			<input type="number" step="0.01" v-model="value_two" placeholder="<?php echo '0.00'; ?>" v-if="'between' == operator || 'not_between' == operator" style="width: 80px!important;text-align:center">
 			<?php do_action('hide_shipping_rates/cart_common_fields') ?>
 		</template>
 	<?php

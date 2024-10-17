@@ -113,7 +113,7 @@ final class Main {
 		}
 
 		if (HIDE_SHIPPING_RATES_BASENAME == $plugin_file) {
-			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates+for+woocommerce&utm_source=plugins+page&utm_medium=get+pro+link', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
+			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=plugins+page&utm_medium=get+pro+link', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
 			$actions = array_merge($new_links, $actions);
 		}
 
@@ -152,18 +152,22 @@ final class Main {
 				return apply_filters('hide_shipping_rates/rule_matched', false, wp_parse_args($rule, Utils::get_rule_values()), $package);
 			});
 
-			//error_log(print_r($package, true));
-
 			$match_type = 'all';
 			if (isset($rule_settings['match_type'])) {
 				$match_type = $rule_settings['match_type'];
 			}
 
+			$matched_rules_result = false;
 			if ('all' === $match_type && count($rules) === count($matched_rules)) {
-				unset($rates[$rate_key]);
+				$matched_rules_result = true;
 			}
 
 			if ('any' === $match_type && count($matched_rules) > 0) {
+				$matched_rules_result = true;
+			}
+
+			$matched_rules_result = apply_filters('hide_shipping_rates/matched_rules_result', $matched_rules_result, $rule_settings);
+			if (true === $matched_rules_result) {
 				unset($rates[$rate_key]);
 			}
 		}

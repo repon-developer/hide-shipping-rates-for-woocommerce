@@ -3,7 +3,7 @@ Contributors: repon.wp
 Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping, hide shipping methods
 Requires at least: 5.0
 Tested up to: 6.6.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -54,6 +54,10 @@ By hiding irrelevant or costly shipping options, the plugin simplifies the check
 
 
 == Changelog ==
+
+= 1.0.1 =
+* Added new rule operator not_between
+* Fixed rule operator between_values to between
 
 = 1.0.0 =
 * Initial release

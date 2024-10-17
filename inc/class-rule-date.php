@@ -85,8 +85,17 @@ final class Date {
 				}
 
 				$current_time = current_time('timestamp');
-
 				return ($current_time >= $time_one && $current_time <= $time_two);
+			}
+
+			if ('not_between' === $operator) {
+				$time_two = strtotime($rule['time_two']);
+				if (false === $time_two) {
+					return $matched;
+				}
+
+				$current_time = current_time('timestamp');
+				return $current_time < $time_one || $current_time > $time_two;
 			}
 		}
 
@@ -111,8 +120,17 @@ final class Date {
 				}
 
 				$current_time = current_time('timestamp');
-
 				return ($current_time >= $date_one && $current_time <= $date_two);
+			}
+
+			if ('not_between' === $operator) {
+				$date_two = strtotime($rule['date_two']);
+				if (false === $date_two) {
+					return $matched;
+				}
+
+				$current_time = current_time('timestamp');
+				return $current_time < $date_one || $current_time > $date_two;
 			}
 		}
 
@@ -128,11 +146,11 @@ final class Date {
 	public function time_template() { ?>
 		<template v-if="type == 'date:time'">
 			<select v-model="date_operator">
-				<?php Utils::get_operators_options(array('before', 'after', 'between')); ?>
+				<?php Utils::get_operators_options(array('before', 'after', 'between', 'not_between')); ?>
 			</select>
 
 			<input type="time" v-model="time_one">
-			<input type="time" v-model="time_two" v-if="date_operator == 'between'">
+			<input type="time" v-model="time_two" v-if="date_operator == 'between' || date_operator == 'not_between'">
 		</template>
 	<?php
 	}
@@ -146,11 +164,11 @@ final class Date {
 	public function date_template() { ?>
 		<template v-if="type == 'date:date'">
 			<select v-model="date_operator">
-				<?php Utils::get_operators_options(array('before', 'after', 'between')); ?>
+				<?php Utils::get_operators_options(array('before', 'after', 'between', 'not_between')); ?>
 			</select>
 
 			<input type="datetime-local" v-model="date_one">
-			<input type="datetime-local" v-model="date_two" v-if="date_operator == 'between'">
+			<input type="datetime-local" v-model="date_two" v-if="date_operator == 'between' || date_operator == 'not_between'">
 		</template>
 	<?php
 	}
