@@ -98,7 +98,7 @@ final class Admin {
 				<?php esc_html_e('Alternate result of matched rules (pro).', 'hide-shipping-rates-for-woocommerce'); ?>
 
 				<?php if (!Utils::has_pro_installed()): ?>
-					<a href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=modal&utm_medium=shipping+methods&utm_content=alternate+rule+result"><?php esc_html_e('Get pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
+					<a href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=alternate+rule+result&utm_medium=shipping+methods"><?php esc_html_e('Get pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
 				<?php endif; ?>
 
 				<?php if (Utils::has_pro_installed() && !Utils::is_pro_activated()): ?>
