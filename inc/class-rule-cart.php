@@ -83,7 +83,6 @@ final class Cart {
 		}
 
 		$compare_value = apply_filters('hide_shipping_rates/cart_compare_value', $compare_value, $rule);
-
 		if ('equal_to' === $operator && $compare_value == $value_one) {
 			return true;
 		}
@@ -104,7 +103,7 @@ final class Cart {
 			return true;
 		}
 
-		if ('between_values' === $operator && $compare_value >= $value_one && $compare_value <= $value_two) {
+		if ('between' === $operator && $compare_value >= $value_one && $compare_value <= $value_two) {
 			return true;
 		}
 
