@@ -206,9 +206,10 @@ final class Cart {
 	public function cart_common_fields() { ?>
 		<select v-model="cart_value_type">
 			<option value="in_cart"><?php esc_html_e('In Cart', 'hide-shipping-rates-for-woocommerce'); ?></option>
-			<option disabled><?php esc_html_e('In Tags (Pro)', 'hide-shipping-rates-for-woocommerce'); ?></option>
-			<option disabled><?php esc_html_e('In Categories (Pro)', 'hide-shipping-rates-for-woocommerce'); ?></option>
-			<option disabled><?php esc_html_e('In Shipping Classes (Pro)', 'hide-shipping-rates-for-woocommerce'); ?></option>
+
+			<?php foreach (Utils::get_product_taxonomies() as $taxonomy_data) : ?>
+				<option disabled><?php esc_html_e(sprintf(__('In %s (pro)', 'hide-shipping-rates-for-woocommerce'), $taxonomy_data->label)); ?></option>
+			<?php endforeach; ?>
 		</select>
 <?php
 	}

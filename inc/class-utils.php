@@ -309,7 +309,7 @@ class Utils {
 		return array_merge($rule_values, array(
 			'value' => '',
 			'type' => 'cart:subtotal',
-			'operator' => 'less_than',
+			'operator' => 'greater_than',
 		));
 	}
 
@@ -421,5 +421,43 @@ class Utils {
 		}, $taxonomies);
 
 		return $taxonomies;
+	}
+
+	/**
+	 * Get total value of terms from cart
+	 * 
+	 * @since 1.0.2
+	 * @return array
+	 */
+	public static function get_terms_total($taxonomy, $allow_terms = false) {
+		$term_totals = array();
+
+		foreach (WC()->cart->get_cart() as $item) {
+			$product = wc_get_product($item['product_id']);
+			$cart_item_terms = wc_get_product_term_ids($item['product_id'], $taxonomy);
+
+			foreach ($cart_item_terms as $term_id) {
+				if (is_array($allow_terms) && !in_array($term_id, $allow_terms)) {
+					continue;
+				}
+
+				if (!isset($term_totals[$term_id])) {
+					$term_totals[$term_id] = array(
+						'line_subtotal' => 0,
+						'quantity' => 0,
+						'weight'   => 0,
+					);
+				}
+
+				$term_totals[$term_id]['line_subtotal'] += $item['line_subtotal'];
+				$term_totals[$term_id]['quantity'] += $item['quantity'];
+
+				if ($product->has_weight()) {
+					$term_totals[$term_id]['weight'] += $product->get_weight() * $item['quantity'];
+				}
+			}
+		}
+
+		return $term_totals;
 	}
 }
