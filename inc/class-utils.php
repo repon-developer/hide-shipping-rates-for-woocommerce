@@ -89,7 +89,7 @@ class Utils {
 			'greater_than' => __('Greater than ( > )', 'hide-shipping-rates-for-woocommerce'),
 			'between' => __('Between', 'hide-shipping-rates-for-woocommerce'),
 			'not_between' => __('Not Between', 'hide-shipping-rates-for-woocommerce'),
-			
+
 			'any_in_list' => __('Any in list', 'hide-shipping-rates-for-woocommerce'),
 			'all_in_list' => __('All in list', 'hide-shipping-rates-for-woocommerce'),
 			'not_in_list' => __('Not in list', 'hide-shipping-rates-for-woocommerce'),
@@ -185,21 +185,6 @@ class Utils {
 				'group' => 'cart_products',
 				'priority' => 5,
 				'label' => __('Products', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'cart_products:categories' => array(
-				'group' => 'cart_products',
-				'priority' => 10,
-				'label' => __('Categories', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'cart_products:tags' => array(
-				'group' => 'cart_products',
-				'priority' => 15,
-				'label' => __('Tags', 'hide-shipping-rates-for-woocommerce'),
-			),
-			'cart_products:shipping_classes' => array(
-				'group' => 'cart_products',
-				'priority' => 20,
-				'label' => __('Shipping Classes', 'hide-shipping-rates-for-woocommerce'),
 			),
 
 			/** Date related field types */
@@ -339,6 +324,52 @@ class Utils {
 	}
 
 	/**
+	 * Converted and get shipping rule data
+	 * 
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function get_rule_settings($json_data) {
+		$rule_settings = json_decode($json_data, true);
+		if (!is_array($rule_settings)) {
+			return array();
+		}
+
+		if (!isset($rule_settings['rules']) || !is_array($rule_settings['rules'])) {
+			$rule_settings['rules'] = array();
+		}
+
+		$rule_settings['rules'] = array_map(function ($rule) {
+			$rule =  wp_parse_args($rule, self::get_rule_values());
+
+			if ('cart_products:categories' === $rule['type']) {
+				$rule['type'] = 'cart_products:product_cat';
+				if (isset($rule['categories']) && is_array($rule['categories'])) {
+					$rule['cart_products_product_cat'] = $rule['categories'];
+				}
+			}
+
+			if ('cart_products:tags' === $rule['type']) {
+				$rule['type'] = 'cart_products:product_tag';
+				if (isset($rule['tags']) && is_array($rule['tags'])) {
+					$rule['cart_products_product_tag'] = $rule['tags'];
+				}
+			}
+
+			if ('cart_products:shipping_classes' === $rule['type']) {
+				$rule['type'] = 'cart_products:product_shipping_class';
+				if (isset($rule['shipping_classes']) && is_array($rule['shipping_classes'])) {
+					$rule['cart_products_product_shipping_class'] = $rule['shipping_classes'];
+				}
+			}
+
+			return apply_filters('hide_shipping_rates/rule_migrate', $rule);
+		}, $rule_settings['rules']);
+
+		return $rule_settings;
+	}
+
+	/**
 	 * Pro field lock message
 	 * 
 	 * @since 1.0.0
@@ -366,5 +397,29 @@ class Utils {
 		} else {
 			echo '<div class="locked-message locked-message-get-pro">Get the <a target="_blank" :href="get_pro_link">pro version</a> for unlock this feature.</div>';
 		}
+	}
+
+	/**
+	 * Get registered taxonomies of product
+	 * 
+	 * @since 1.0.2
+	 * @return array
+	 */
+	public static function get_product_taxonomies() {
+		$taxonomies = get_object_taxonomies('product', 'objects');
+		foreach ($taxonomies as $tax_slug => $taxonomy) {
+			if (false === $taxonomy->public) {
+				unset($taxonomies[$tax_slug]);
+			}
+		}
+
+		$taxonomies = array_map(function ($taxonomy) {
+			return (object) array(
+				'slug' => $taxonomy->name,
+				'label' => $taxonomy->label,
+			);
+		}, $taxonomies);
+
+		return $taxonomies;
 	}
 }

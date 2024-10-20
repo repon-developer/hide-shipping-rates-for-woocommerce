@@ -98,7 +98,7 @@ final class Admin {
 				<?php esc_html_e('Alternate result of matched rules (pro).', 'hide-shipping-rates-for-woocommerce'); ?>
 
 				<?php if (!Utils::has_pro_installed()): ?>
-					<a href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=alternate+rule+result&utm_medium=shipping+methods"><?php esc_html_e('Get pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
+					<a target="_blank" href="https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=alternate+rule+result&utm_medium=shipping+methods"><?php esc_html_e('Get pro', 'hide-shipping-rates-for-woocommerce'); ?></a>
 				<?php endif; ?>
 
 				<?php if (Utils::has_pro_installed() && !Utils::is_pro_activated()): ?>
@@ -122,7 +122,7 @@ final class Admin {
 	 * @return string
 	 */
 	public function shipping_rules_settings_field_output($html, $field_id, $args, $object) {
-		$settings_data = json_decode(stripslashes($object->get_option($field_id)), true);
+		$settings_data = Utils::get_rule_settings(stripslashes($object->get_option($field_id)));
 
 		ob_start(); ?>
 		<tr>
@@ -173,10 +173,10 @@ final class Admin {
 	 * @return void
 	 */
 	public function register_scripts() {
-		if (defined('HIDE_SHIPPING_RATES_DEV')) {
-			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.js', [], '3.5.1', true);
+		if (defined('CODIEPRESS_DEVELOPMENT')) {
+			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.js', [], '3.5.12', true);
 		} else {
-			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.min.js', [], '3.5.1', true);
+			wp_register_script('hide-shipping-rates-vue', HIDE_SHIPPING_RATES_URI . 'assets/vue.min.js', [], '3.5.12', true);
 		}
 	}
 
@@ -353,8 +353,8 @@ final class Admin {
 				$search_args['search'] = $search_term;
 			}
 
-			if (isset($_POST['term_ids']) && is_array($_POST['term_ids'])) {
-				$search_args['include'] = array_map('absint', $_POST['term_ids']);
+			if (isset($_POST['ids']) && is_array($_POST['ids'])) {
+				$search_args['include'] = array_map('absint', $_POST['ids']);
 			}
 
 			$terms = get_terms($search_args);
@@ -369,8 +369,8 @@ final class Admin {
 				$search_args['search'] = $search_term;
 			}
 
-			if (isset($_POST['user_ids']) && is_array($_POST['user_ids'])) {
-				$search_args['include'] = array_map('absint', $_POST['user_ids']);
+			if (isset($_POST['ids']) && is_array($_POST['ids'])) {
+				$search_args['include'] = array_map('absint', $_POST['ids']);
 			}
 
 			$get_users = get_users($search_args);

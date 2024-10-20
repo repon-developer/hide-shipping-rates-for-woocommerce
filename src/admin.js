@@ -18,12 +18,12 @@
 		});
 	}
 
-	const get_select2_ajax_model_data = (element) => {
+	const get_select2_map_data = (element) => {
 		return Object.assign({
 			model: 'placeholder',
 			data_type: 'data_type_placeholder',
 			hold_data: 'hold_data_placeholder',
-		}, element.data('model-values'))
+		}, element.data('select2-map'))
 	}
 
 	const Rule = {
@@ -79,7 +79,7 @@
 					type: "POST",
 					delay: 500,
 					data: function (params) {
-						const values_map = get_select2_ajax_model_data($(this));
+						const values_map = get_select2_map_data($(this));
 
 						return {
 							country: $(this).attr('data-country'),
@@ -99,7 +99,7 @@
 					}
 				}
 			}).on('change', function () {
-				const field_model = get_select2_ajax_model_data($(this)).model;
+				const field_model = get_select2_map_data($(this)).model;
 				if (field_model.length) {
 					self[field_model] = $(this).val();
 				}
@@ -152,7 +152,7 @@
 				const self = this;
 
 				this.$nextTick(() => {
-					const values_map = get_select2_ajax_model_data($(this.$refs.select2_ajax));
+					const values_map = get_select2_map_data($(this.$refs.select2_ajax));
 					if (!self[values_map.model] || !self[values_map.model].length) {
 						return
 					}

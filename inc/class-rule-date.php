@@ -49,20 +49,20 @@ final class Date {
 	 * @return boolean
 	 */
 	public function rule_filters($matched, $rule) {
+		$operator = $rule['date_operator'];
+
 		if ('date:weekly_days' === $rule['type']) {
 			$weekly_days = isset($rule['weekly_days']) && is_array($rule['weekly_days']) ? $rule['weekly_days'] : array();
 			$current_day = strtolower(current_time('l'));
 
-			if ('any_in_list' == $rule['operator'] && in_array($current_day, $weekly_days)) {
+			if ('any_in_list' == $operator && in_array($current_day, $weekly_days)) {
 				return true;
 			}
 
-			if ('not_in_list' == $rule['operator'] && !in_array($current_day, $weekly_days)) {
+			if ('not_in_list' == $operator && !in_array($current_day, $weekly_days)) {
 				return true;
 			}
 		}
-
-		$operator = $rule['date_operator'];
 
 		if ('date:time' === $rule['type']) {
 			$time_one = strtotime($rule['time_one']);
@@ -181,7 +181,7 @@ final class Date {
 	 */
 	public function weekly_days() { ?>
 		<template v-if="type == 'date:weekly_days'">
-			<select v-model="operator">
+			<select v-model="date_operator">
 				<?php Utils::get_operators_options(array('any_in_list', 'not_in_list')); ?>
 			</select>
 

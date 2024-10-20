@@ -128,8 +128,8 @@ final class Main {
 	public function manage_shipping_rates($rates, $package) {
 		foreach ($rates as $rate_key => $rate) {
 			$method   = \WC_Shipping_Zones::get_shipping_method($rate->get_instance_id());
-			$rule_settings = json_decode(stripslashes($method->get_option('hide_shipping_rates_rules_settings')), true);
-			if (!is_array($rule_settings) || empty($rule_settings)) {
+			$rule_settings = Utils::get_rule_settings(stripslashes($method->get_option('hide_shipping_rates_rules_settings')));
+			if (empty($rule_settings)) {
 				continue;
 			}
 

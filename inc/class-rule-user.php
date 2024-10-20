@@ -101,7 +101,7 @@ final class User {
 			</select>
 
 			<div class="loading-indicator" v-if="loading"></div>
-			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'hide-shipping-rates-for-woocommerce'); ?>" data-model-values="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
+			<select class="select2-flex1" ref="select2_ajax" multiple v-else data-placeholder="<?php esc_html_e('Select users', 'hide-shipping-rates-for-woocommerce'); ?>" data-select2-map="<?php echo esc_attr(wp_json_encode($model_values)) ?>">
 				<option v-for="user in get_ui_data_items('hold_users')" :value="user.id" :selected="users.includes(user.id.toString())">{{user.name}}</option>
 			</select>
 		</template>
