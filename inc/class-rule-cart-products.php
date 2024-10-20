@@ -18,9 +18,9 @@ final class Cart_Products {
 	 */
 	public function __construct() {
 		add_filter('hide_shipping_rates/rule_values', array($this, 'rule_values'));
+		add_filter('hide_shipping_rates/rule_types', array($this, 'add_rule_types'));
 		add_filter('hide_shipping_rates/rule_ui_values', array($this, 'rule_ui_values'));
 		add_filter('hide_shipping_rates/rule_matched', array($this, 'rule_filters'), 10, 2);
-		add_filter('hide_shipping_rates/rule_types', array($this, 'add_rule_types'));
 
 		add_action('hide_shipping_rates/rule_templates', array($this, 'products_template'));
 		add_action('hide_shipping_rates/rule_templates', array($this, 'add_taxonomy_templates'));
