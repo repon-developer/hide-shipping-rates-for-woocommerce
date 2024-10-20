@@ -124,7 +124,7 @@
 			},
 
 			cart_value_type: function (value) {
-				if (['in_categories', 'in_tags', 'in_shipping_classes'].includes(value)) {
+				if ('in_cart' !== value) {
 					this.preload_layout_data();
 				}
 			},
