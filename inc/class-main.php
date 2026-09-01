@@ -70,6 +70,7 @@ final class Main {
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-cart.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-date.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-user.php';
+		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-suggested-plugin.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-cart-products.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-order-history.php';
 		require_once HIDE_SHIPPING_RATES_PATH . 'inc/class-rule-billing-shipping.php';
@@ -97,27 +98,7 @@ final class Main {
 	 * @return void
 	 */
 	public function hooks() {
-		add_filter('plugin_action_links', array($this, 'add_plugin_links'), 10, 2);
 		add_filter('woocommerce_package_rates', array($this, 'manage_shipping_rates'), 100000, 2);
-	}
-
-	/**
-	 * Add get pro link in plugin links
-	 * 
-	 * @since 1.0.1
-	 * @return array
-	 */
-	public function add_plugin_links($actions, $plugin_file) {
-		if (Utils::has_pro_installed()) {
-			return $actions;
-		}
-
-		if (HIDE_SHIPPING_RATES_BASENAME == $plugin_file) {
-			$new_links[] = sprintf('<a target="_blank" href="%s">%s</a>', 'https://codiepress.com/plugins/hide-shipping-rates-for-woocommerce-pro/?utm_campaign=hide+shipping+rates&utm_source=plugins+page&utm_medium=get+pro+link', __('Get Pro', 'hide-shipping-rates-for-woocommerce'));
-			$actions = array_merge($new_links, $actions);
-		}
-
-		return $actions;
 	}
 
 	/**

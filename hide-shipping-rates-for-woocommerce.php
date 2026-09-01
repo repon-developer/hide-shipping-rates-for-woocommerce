@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Hide Shipping Rates for WooCommerce
  * Description: Easily hide WooCommerce shipping rates based on cart total, weight, quantity, product class, address, and user roles to enhance checkout flexibility.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Repon Hossain
  * Author URI: https://workwithrepon.com
  * Text Domain: hide-shipping-rates-for-woocommerce
@@ -11,7 +11,6 @@
  * Requires Plugins: woocommerce
  * Requires at least: 6.2.0
  * Requires PHP: 7.4.3
- * Tested up to: 6.7.0
  * 
  * License: GPLv3 or later
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -22,14 +21,11 @@ if (!defined('ABSPATH')) {
 }
 
 define('HIDE_SHIPPING_RATES_FILE', __FILE__);
-define('HIDE_SHIPPING_RATES_VERSION', '1.0.2');
+define('HIDE_SHIPPING_RATES_VERSION', '1.0.3');
 define('HIDE_SHIPPING_RATES_BASENAME', plugin_basename(__FILE__));
 define('HIDE_SHIPPING_RATES_URI', trailingslashit(plugins_url('/', __FILE__)));
 define('HIDE_SHIPPING_RATES_PATH', trailingslashit(plugin_dir_path(__FILE__)));
 define('HIDE_SHIPPING_RATES_PHP_MIN', '7.4.3');
-
-define('HIDE_SHIPPING_RATES_API_URI', 'https://codiepress.com');
-define('HIDE_SHIPPING_RATES_PLUGIN_ID', 925);
 
 /**
  * Check PHP version. Show notice if version of PHP less than our 7.4.3 

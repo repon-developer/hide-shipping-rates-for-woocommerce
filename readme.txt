@@ -1,9 +1,9 @@
 === Hide Shipping Rates for WooCommerce, Conditional Shipping Method ===
 Contributors: repon.wp
 Tags: WooCommerce, hide shipping rates, shipping methods, WooCommerce shipping, hide shipping methods
-Requires at least: 5.0
-Tested up to: 6.7.0
-Stable tag: 1.0.2
+Requires at least: 6.2.0
+Tested up to: 7.1
+Stable tag: 1.0.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -54,6 +54,9 @@ By hiding irrelevant or costly shipping options, the plugin simplifies the check
 
 
 == Changelog ==
+
+= 1.0.3 =
+* WordPress 7.1 Compatibility Check
 
 = 1.0.2 =
 * Added new rules
